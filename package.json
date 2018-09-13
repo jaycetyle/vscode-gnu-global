@@ -8,16 +8,17 @@
         "vscode": "^1.27.0"
     },
     "categories": [
-        "Other"
+        "Programming Languages"
     ],
     "activationEvents": [
-        "onCommand:extension.sayHello"
+        "onLanguage:cpp",
+        "onLanguage:c"
     ],
     "main": "./out/extension",
     "contributes": {
         "commands": [{
-            "command": "extension.sayHello",
-            "title": "Hello World"
+            "command": "extension.showGlobalVersion",
+            "title": "global: Show GNU GLOBAL Binary Version"
         }]
     },
     "scripts": {
