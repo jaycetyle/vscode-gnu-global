@@ -1,7 +1,7 @@
 {
     "name": "vscode-gnu-global",
-    "displayName": "Visual Studio Code GNU Global",
-    "description": "GNU Global",
+    "displayName": "Visual Studio Code GNU GLOBAL",
+    "description": "GNU GLOBAL",
     "version": "0.0.1",
     "publisher": "jaycetyle",
     "engines": {
