@@ -49,6 +49,19 @@ export default class Global {
         return ret;
     }
 
+    public provideCompletionItems(document: vscode.TextDocument,
+                                  position: vscode.Position)
+                                  : vscode.CompletionItem[] {
+        let ret: vscode.CompletionItem[] = [];
+        const symbol = document.getText(document.getWordRangeAtPosition(position));
+        const output = this.execute(['-c', symbol], path.dirname(document.fileName));
+        const lines = output.split(/\r?\n/);
+        lines.forEach((line) => {
+            ret.push(new vscode.CompletionItem(line));
+        });
+        return ret;
+    }
+
     private parseLine(output: string): GlobalOutput|undefined
     {
         let tokens = output.split(/ +/);
