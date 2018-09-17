@@ -26,9 +26,9 @@ export default class Global {
         return this.execute(['--version']).split(/\r?\n/)[0];
     }
 
-    public findDefinition(document: vscode.TextDocument,
-                          position: vscode.Position)
-                          : vscode.Location[] {
+    public provideDefinition(document: vscode.TextDocument,
+                             position: vscode.Position)
+                             : vscode.Location[] {
         let ret: vscode.Location[] = [];
         const symbol = document.getText(document.getWordRangeAtPosition(position));
         const output = this.execute(['--encode-path', '" "', '-xa', symbol],
