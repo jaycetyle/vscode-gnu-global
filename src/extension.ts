@@ -2,6 +2,7 @@
 import * as vscode from 'vscode';
 import Global from './global';
 import DefinitionProvider from './definitionProvider'
+import ReferenceProvider from './referenceProvider'
 import CompletionItemProvider from './completionItemProvider'
 
 const disposables:vscode.Disposable[] = [];
@@ -12,12 +13,13 @@ const global = new Global();
 export function activate(context: vscode.ExtensionContext) {
 
     console.log('"vscode-gnu-global" is now active!');
-    // var configuration = vscode.workspace.getConfiguration('gnuGlobal');
 
     disposables.push(vscode.commands.registerCommand('extension.showGlobalVersion',
                      onShowGlobalVersion));
     disposables.push(vscode.languages.registerDefinitionProvider(['cpp', 'c'],
                      new DefinitionProvider(global)));
+    disposables.push(vscode.languages.registerReferenceProvider(['cpp', 'c'],
+                     new ReferenceProvider(global)));
     disposables.push(vscode.languages.registerCompletionItemProvider(['cpp', 'c'],
                      new CompletionItemProvider(global)));
 }

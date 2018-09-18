@@ -49,6 +49,29 @@ export default class Global {
         return ret;
     }
 
+    public provideReferences(document: vscode.TextDocument,
+                             position: vscode.Position)
+                             : vscode.Location[] {
+        let ret: vscode.Location[] = [];
+        const symbol = document.getText(document.getWordRangeAtPosition(position));
+        const output = this.execute(['--encode-path', '" "', '-xra', symbol],
+                                    path.dirname(document.fileName));
+        const lines = output.split(/\r?\n/);
+        lines.forEach((line) => {
+            let parsed = this.parseLine(line);
+            if (parsed) {
+                const colStart = parsed.info.indexOf(parsed.symbol);
+                const colEnd = colStart + parsed.symbol.length;
+                const start = new vscode.Position(parsed.line, colStart);
+                const end = new vscode.Position(parsed.line, colEnd);
+                const location = new vscode.Location(vscode.Uri.file(parsed.path),
+                                                     new vscode.Range(start, end));
+                ret.push(location);
+            }
+        });
+        return ret;
+    }
+
     public provideCompletionItems(document: vscode.TextDocument,
                                   position: vscode.Position)
                                   : vscode.CompletionItem[] {
