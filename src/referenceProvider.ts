@@ -1,7 +1,7 @@
 import * as vscode from 'vscode';
 import Global from './global';
 
-export default class GlobalReferenceProvider implements vscode.ReferenceProvider {
+export default class ReferenceProvider implements vscode.ReferenceProvider {
     global: Global;
 
     constructor(global: Global) {

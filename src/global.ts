@@ -4,15 +4,35 @@ import * as path from 'path';
 const spawnSync = require('child_process').spawnSync;
 
 /*
- * Parsed gnu global output
+ * Parsed gnu global output with -x option
+ * '-x', '--cxref': Use standard ctags cxref (with ‘-x’) format.
  * Sample output:
  * nfs_fh 19 /home/jayce/Projects/linux/include/linux/nfs.h struct nfs_fh {
  */
-interface GlobalOutput {
+interface XFormat {
     symbol: string;
     line: number;
     path: string;
     info: string;
+}
+
+function parseXFormat(line: string): XFormat
+{
+    let tokens = line.split(/ +/);
+    const symbol = tokens.shift();
+    const lineNo = tokens.shift();
+    const path = tokens.shift();
+    const info = tokens.join(' ');
+
+    if (symbol && line && path && info) {
+        return {
+            symbol: symbol,
+            line: lineNo ? parseInt(lineNo) - 1 : 0,
+            path: path ? path.replace("%20", " ") : path,
+            info: info
+        }
+    }
+    throw "Parse cxref output failed: " + line;
 }
 
 export default class Global {
@@ -23,92 +43,62 @@ export default class Global {
     }
 
     public getVersion(): string {
-        return this.execute(['--version']).split(/\r?\n/)[0];
+        return this.execute(['--version'])[0];
     }
 
     public provideDefinition(document: vscode.TextDocument,
                              position: vscode.Position)
                              : vscode.Location[] {
-        let ret: vscode.Location[] = [];
         const symbol = document.getText(document.getWordRangeAtPosition(position));
-        const output = this.execute(['--encode-path', '" "', '-xa', symbol],
-                                    path.dirname(document.fileName));
-        const lines = output.split(/\r?\n/);
-        lines.forEach((line) => {
-            let parsed = this.parseLine(line);
-            if (parsed) {
-                const colStart = parsed.info.indexOf(parsed.symbol);
-                const colEnd = colStart + parsed.symbol.length;
-                const start = new vscode.Position(parsed.line, colStart);
-                const end = new vscode.Position(parsed.line, colEnd);
-                const location = new vscode.Location(vscode.Uri.file(parsed.path),
-                                                     new vscode.Range(start, end));
-                ret.push(location);
-            }
-        });
-        return ret;
+        const lines = this.execute(['--encode-path', '" "', '-xa', symbol],
+                                   path.dirname(document.fileName));
+        return this.convertXFormatLinesToLocations(lines);
     }
 
     public provideReferences(document: vscode.TextDocument,
                              position: vscode.Position)
                              : vscode.Location[] {
-        let ret: vscode.Location[] = [];
         const symbol = document.getText(document.getWordRangeAtPosition(position));
-        const output = this.execute(['--encode-path', '" "', '-xra', symbol],
-                                    path.dirname(document.fileName));
-        const lines = output.split(/\r?\n/);
-        lines.forEach((line) => {
-            let parsed = this.parseLine(line);
-            if (parsed) {
-                const colStart = parsed.info.indexOf(parsed.symbol);
-                const colEnd = colStart + parsed.symbol.length;
-                const start = new vscode.Position(parsed.line, colStart);
-                const end = new vscode.Position(parsed.line, colEnd);
-                const location = new vscode.Location(vscode.Uri.file(parsed.path),
-                                                     new vscode.Range(start, end));
-                ret.push(location);
-            }
-        });
-        return ret;
+        const lines = this.execute(['--encode-path', '" "', '-xra', symbol],
+                                   path.dirname(document.fileName));
+        return this.convertXFormatLinesToLocations(lines);
     }
 
     public provideCompletionItems(document: vscode.TextDocument,
                                   position: vscode.Position)
                                   : vscode.CompletionItem[] {
-        let ret: vscode.CompletionItem[] = [];
         const symbol = document.getText(document.getWordRangeAtPosition(position));
-        const output = this.execute(['-c', symbol], path.dirname(document.fileName));
-        const lines = output.split(/\r?\n/);
+        const lines = this.execute(['-c', symbol], path.dirname(document.fileName));
+        return lines.map(line => new vscode.CompletionItem(line));
+    }
+
+    /* Convert gnu global --cxref output to vscode.Location */
+    private convertXFormatLinesToLocations(lines: string[]): vscode.Location[] {
+        let ret: vscode.Location[] = [];
         lines.forEach((line) => {
-            ret.push(new vscode.CompletionItem(line));
+            if (!line.length)
+                return; // empty line
+            try {
+                const parsed = parseXFormat(line);
+                const colStart = parsed.info.indexOf(parsed.symbol);
+                const colEnd = colStart + parsed.symbol.length;
+                const start = new vscode.Position(parsed.line, colStart);
+                const end = new vscode.Position(parsed.line, colEnd);
+                const location = new vscode.Location(vscode.Uri.file(parsed.path),
+                                                    new vscode.Range(start, end));
+                ret.push(location);
+            } catch (e) {
+                console.log(e);
+            }
         });
         return ret;
     }
 
-    private parseLine(output: string): GlobalOutput|undefined
-    {
-        let tokens = output.split(/ +/);
-        const symbol = tokens.shift();
-        const line = tokens.shift();
-        const path = tokens.shift();
-        const info = tokens.join(' ');
-
-        if (symbol && line && path && info) {
-            return {
-                symbol: symbol,
-                line: line ? parseInt(line) - 1 : 0,
-                path: path ? path.replace("%20", " ") : path,
-                info: info
-            }
-        }
-        return undefined;
-    }
-
-    /* Execute 'global args' and return stdout */
+    /* Execute 'global args' and return stdout with line split */
     private execute(args: string[],
                     cwd: string|undefined = undefined,
                     env: any = null)
-                    : string {
+                    : string[] {
         const options = {
             cwd: cwd,
             env: env
@@ -118,7 +108,6 @@ export default class Global {
         if (ret.error) {
             throw ret.error;
         }
-        console.log(ret.stdout.toString());
-        return ret.stdout.toString();
+        return ret.stdout.toString().split(/\r?\n/);
     }
 }
