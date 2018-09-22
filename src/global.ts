@@ -35,6 +35,27 @@ function parseXFormat(line: string): XFormat
     throw "Parse cxref output failed: " + line;
 }
 
+function parseSymbolKind(ref: XFormat): vscode.SymbolKind
+{
+    /*
+     * GNU Global doesn't provide symbol kind inforamtion.
+     * This is a simple implementation to get the symbol kind but is not accurate.
+     * Originally developed by austin in https://github.com/austin-----/code-gnu-global
+     */
+    var kind = vscode.SymbolKind.Variable;
+    const info = ref.info;
+    if (info.indexOf('(') != -1) {
+        kind = vscode.SymbolKind.Function;
+    } else if (info.startsWith('class ')) {
+        kind = vscode.SymbolKind.Class;
+    } else if (info.startsWith('struct ')) {
+        kind = vscode.SymbolKind.Class;
+    } else if (info.startsWith('enum ')) {
+        kind = vscode.SymbolKind.Enum;
+    }
+    return kind;
+}
+
 export default class Global {
     executable: string;         // Executable name. Default: global
 
@@ -70,6 +91,34 @@ export default class Global {
         const symbol = document.getText(document.getWordRangeAtPosition(position));
         const lines = this.execute(['-c', symbol], path.dirname(document.fileName));
         return lines.map(line => new vscode.CompletionItem(line));
+    }
+
+    public provideDocumentSymbols(document: vscode.TextDocument)
+                                  : vscode.SymbolInformation[] {
+        const lines = this.execute(['--encode-path', '" "', '-xaf', document.fileName],
+                                   path.dirname(document.fileName));
+        let ret: vscode.SymbolInformation[] = [];
+        lines.forEach((line) => {
+            if (!line.length)
+                return; // empty line
+            try {
+                const parsed = parseXFormat(line);
+                const colStart = parsed.info.indexOf(parsed.symbol);
+                const colEnd = colStart + parsed.symbol.length;
+                const start = new vscode.Position(parsed.line, colStart);
+                const end = new vscode.Position(parsed.line, colEnd);
+                const location = new vscode.Location(vscode.Uri.file(parsed.path),
+                                                    new vscode.Range(start, end));
+                const kind = parseSymbolKind(parsed);
+                ret.push(new vscode.SymbolInformation(parsed.symbol,
+                                                      kind,
+                                                      "", // container name, we don't support this feature
+                                                      location));
+            } catch (e) {
+                console.log(e);
+            }
+        });
+        return ret;
     }
 
     /* Convert gnu global --cxref output to vscode.Location */

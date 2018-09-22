@@ -4,6 +4,7 @@ import Global from './global';
 import DefinitionProvider from './definitionProvider'
 import ReferenceProvider from './referenceProvider'
 import CompletionItemProvider from './completionItemProvider'
+import DocumentSymbolProvider from './documentSymbolProvider'
 
 const disposables:vscode.Disposable[] = [];
 const global = new Global();
@@ -22,6 +23,8 @@ export function activate(context: vscode.ExtensionContext) {
                      new ReferenceProvider(global)));
     disposables.push(vscode.languages.registerCompletionItemProvider(['cpp', 'c'],
                      new CompletionItemProvider(global)));
+    disposables.push(vscode.languages.registerDocumentSymbolProvider(['cpp', 'c'],
+                     new DocumentSymbolProvider(global)));
 }
 
 function onShowGlobalVersion() {
