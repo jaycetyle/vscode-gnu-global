@@ -25,6 +25,7 @@ export function activate(context: vscode.ExtensionContext) {
                      new CompletionItemProvider(global)));
     disposables.push(vscode.languages.registerDocumentSymbolProvider(['cpp', 'c'],
                      new DocumentSymbolProvider(global)));
+    disposables.push(vscode.workspace.onDidSaveTextDocument(doc => onDidSaveTextDocument(doc)));
 }
 
 function onShowGlobalVersion() {
@@ -33,6 +34,14 @@ function onShowGlobalVersion() {
     } catch (e) {
         console.error(e.toString());
         vscode.window.showInformationMessage('Failed to run get GNU Global version');
+    }
+}
+
+function onDidSaveTextDocument(doc: vscode.TextDocument) {
+    try {
+        global.updateTags(doc);
+    } catch (e) {
+        console.error(e.toString());
     }
 }
 

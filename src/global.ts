@@ -144,6 +144,10 @@ export default class Global {
         });
     }
 
+    updateTags(document: vscode.TextDocument) {
+        this.execute(['-u'], path.dirname(document.fileName));
+    }
+
     /* Execute 'global args' and return stdout with line split */
     private execute(args: string[],
                     cwd: string|undefined = undefined,
