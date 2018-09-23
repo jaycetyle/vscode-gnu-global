@@ -1,6 +1,7 @@
 'use strict';
 import * as vscode from 'vscode';
 import Global from './global';
+import Configuration, { BoolDefault } from './configuration';
 import DefinitionProvider from './definitionProvider'
 import ReferenceProvider from './referenceProvider'
 import CompletionItemProvider from './completionItemProvider'
@@ -8,6 +9,7 @@ import DocumentSymbolProvider from './documentSymbolProvider'
 
 const disposables:vscode.Disposable[] = [];
 const global = new Global();
+const configuration = new Configuration();
 
 // Called when the extension is activated
 // The extension is activated the very first time the command is executed
@@ -37,9 +39,25 @@ function onShowGlobalVersion() {
     }
 }
 
+function checkConfigAndUpdateTags(doc: vscode.TextDocument) {
+    const autoUpdate = configuration.autoUpdate;
+    if (autoUpdate === BoolDefault.Disabled) {
+        return;
+    } else if (autoUpdate == BoolDefault.Default) {
+        /* Default: disable autoupdate if GTAGS size is larger than 50MB. */
+        const size = global.gtagsSize(doc.fileName);
+        if (size >= 50*1024*1024)
+            return;
+    }
+    global.updateTags(doc);
+}
+
 function onDidSaveTextDocument(doc: vscode.TextDocument) {
     try {
-        global.updateTags(doc);
+        if (doc.languageId !== "cpp" && doc.languageId !== "c")
+            return;
+
+        checkConfigAndUpdateTags(doc);
     } catch (e) {
         console.error(e.toString());
     }

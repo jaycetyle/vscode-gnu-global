@@ -1,5 +1,6 @@
 import * as vscode from 'vscode';
 import * as path from 'path';
+import * as fs from 'fs';
 
 const spawnSync = require('child_process').spawnSync;
 
@@ -146,6 +147,15 @@ export default class Global {
 
     updateTags(document: vscode.TextDocument) {
         this.execute(['-u'], path.dirname(document.fileName));
+    }
+
+    gtagsSize(filepath: string): number {
+        let cwd = filepath;
+        if (!fs.lstatSync(cwd).isDirectory()) {
+            cwd = path.dirname(cwd);
+        }
+        let gtagsPath = path.join(this.execute(['-p'], cwd)[0], "GTAGS");
+        return fs.lstatSync(gtagsPath).size;
     }
 
     /* Execute 'global args' and return stdout with line split */

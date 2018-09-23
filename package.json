@@ -19,7 +19,18 @@
         "commands": [{
             "command": "extension.showGlobalVersion",
             "title": "global: Show GNU GLOBAL Binary Version"
-        }]
+        }],
+        "configuration": {
+            "properties": {
+                "gnuglobal.autoupdate": {
+                    "type": ["string"],
+                    "enum": ["Enabled", "Disabled", "Default"],
+                    "default": "Default",
+                    "scope": "resource",
+                    "description": "Controls whether global should automatically update the tags after file saved. \"Default\": disable autoupdate if GTAGS database size is larger than 50MB. It is recommended to disable this feature if the project is too large."
+                }
+            }
+        }
     },
     "scripts": {
         "vscode:prepublish": "npm run compile",
