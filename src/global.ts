@@ -9,51 +9,89 @@ const spawnSync = require('child_process').spawnSync;
  * Sample output:
  * nfs_fh 19 /home/jayce/Projects/linux/include/linux/nfs.h struct nfs_fh {
  */
-interface XFormat {
-    symbol: string;
-    line: number;
-    path: string;
-    info: string;
-}
+class XRef {
+    readonly symbol: string;
+    readonly line: number;
+    readonly path: string;
+    readonly info: string;
 
-function parseXFormat(line: string): XFormat
-{
-    let tokens = line.split(/ +/);
-    const symbol = tokens.shift();
-    const lineNo = tokens.shift();
-    const path = tokens.shift();
-    const info = tokens.join(' ');
+    constructor(symbol: string,
+                line: number,
+                path: string,
+                info: string) {
+        this.symbol = symbol;
+        this.line = line;
+        this.path = path;
+        this.info = info;
+    }
 
-    if (symbol && line && path && info) {
-        return {
-            symbol: symbol,
-            line: lineNo ? parseInt(lineNo) - 1 : 0,
-            path: path ? path.replace("%20", " ") : path,
-            info: info
+    static fromGlobalOutput(line: string): XRef {
+        let tokens = line.split(/ +/);
+        const symbol = tokens.shift();
+        const lineNo = tokens.shift();
+        const path = tokens.shift();
+        const info = tokens.join(' ');
+
+        if (symbol && lineNo && path && info) {
+            return new XRef (
+                symbol,
+                lineNo ? parseInt(lineNo) - 1 : 0,
+                path ? path.replace("%20", " ") : path,
+                info
+            )
         }
+        throw "Parse xref output failed: " + line;
     }
-    throw "Parse cxref output failed: " + line;
+
+    /*
+    * GNU Global doesn't provide symbol kind inforamtion.
+    * This is a simple implementation to get the symbol kind but is not accurate.
+    * Originally developed by austin in https://github.com/austin-----/code-gnu-global
+    */
+    get symbolKind(): vscode.SymbolKind
+    {
+        var kind = vscode.SymbolKind.Variable;
+        if (this.info.indexOf('(') != -1) {
+            kind = vscode.SymbolKind.Function;
+        } else if (this.info.startsWith('class ')) {
+            kind = vscode.SymbolKind.Class;
+        } else if (this.info.startsWith('struct ')) {
+            kind = vscode.SymbolKind.Class;
+        } else if (this.info.startsWith('enum ')) {
+            kind = vscode.SymbolKind.Enum;
+        }
+        return kind;
+    }
+
+    get range(): vscode.Range {
+        const colStart = this.info.indexOf(this.symbol);
+        const colEnd = colStart + this.symbol.length;
+        const start = new vscode.Position(this.line, colStart);
+        const end = new vscode.Position(this.line, colEnd);
+        return new vscode.Range(start, end);
+    }
+
+    get location(): vscode.Location {
+        return new vscode.Location(vscode.Uri.file(this.path), this.range);
+    }
 }
 
-function parseSymbolKind(ref: XFormat): vscode.SymbolKind
-{
-    /*
-     * GNU Global doesn't provide symbol kind inforamtion.
-     * This is a simple implementation to get the symbol kind but is not accurate.
-     * Originally developed by austin in https://github.com/austin-----/code-gnu-global
-     */
-    var kind = vscode.SymbolKind.Variable;
-    const info = ref.info;
-    if (info.indexOf('(') != -1) {
-        kind = vscode.SymbolKind.Function;
-    } else if (info.startsWith('class ')) {
-        kind = vscode.SymbolKind.Class;
-    } else if (info.startsWith('struct ')) {
-        kind = vscode.SymbolKind.Class;
-    } else if (info.startsWith('enum ')) {
-        kind = vscode.SymbolKind.Enum;
-    }
-    return kind;
+/*
+ * foreach none empty string {
+ *    push callbackfu return value to output array if it is not undefined
+ * }
+ */
+function mapNoneEmpty<T>(lines: string[], callbackfn: (value: string) => T|undefined)
+                         : T[] {
+    let ret: T[] = [];
+    lines.forEach(line => {
+        if (!line.length)
+            return; // empty
+        const val = callbackfn(line);
+        if (val)
+            ret.push(val);
+    });
+    return ret;
 }
 
 export default class Global {
@@ -63,84 +101,47 @@ export default class Global {
         this.executable = executable;
     }
 
-    public getVersion(): string {
+    getVersion(): string {
         return this.execute(['--version'])[0];
     }
 
-    public provideDefinition(document: vscode.TextDocument,
-                             position: vscode.Position)
-                             : vscode.Location[] {
+    provideDefinition(document: vscode.TextDocument,
+                      position: vscode.Position)
+                      : vscode.Location[] {
         const symbol = document.getText(document.getWordRangeAtPosition(position));
         const lines = this.execute(['--encode-path', '" "', '-xa', symbol],
                                    path.dirname(document.fileName));
-        return this.convertXFormatLinesToLocations(lines);
+        return mapNoneEmpty(lines, line => XRef.fromGlobalOutput(line).location);
     }
 
-    public provideReferences(document: vscode.TextDocument,
-                             position: vscode.Position)
-                             : vscode.Location[] {
+    provideReferences(document: vscode.TextDocument,
+                      position: vscode.Position)
+                      : vscode.Location[] {
         const symbol = document.getText(document.getWordRangeAtPosition(position));
         const lines = this.execute(['--encode-path', '" "', '-xra', symbol],
                                    path.dirname(document.fileName));
-        return this.convertXFormatLinesToLocations(lines);
+        return mapNoneEmpty(lines, line => XRef.fromGlobalOutput(line).location);
     }
 
-    public provideCompletionItems(document: vscode.TextDocument,
-                                  position: vscode.Position)
-                                  : vscode.CompletionItem[] {
+    provideCompletionItems(document: vscode.TextDocument,
+                           position: vscode.Position)
+                           : vscode.CompletionItem[] {
         const symbol = document.getText(document.getWordRangeAtPosition(position));
         const lines = this.execute(['-c', symbol], path.dirname(document.fileName));
-        return lines.map(line => new vscode.CompletionItem(line));
+        return mapNoneEmpty(lines, line => new vscode.CompletionItem(line));
     }
 
-    public provideDocumentSymbols(document: vscode.TextDocument)
-                                  : vscode.SymbolInformation[] {
+    provideDocumentSymbols(document: vscode.TextDocument)
+                           : vscode.SymbolInformation[] {
         const lines = this.execute(['--encode-path', '" "', '-xaf', document.fileName],
                                    path.dirname(document.fileName));
-        let ret: vscode.SymbolInformation[] = [];
-        lines.forEach((line) => {
-            if (!line.length)
-                return; // empty line
-            try {
-                const parsed = parseXFormat(line);
-                const colStart = parsed.info.indexOf(parsed.symbol);
-                const colEnd = colStart + parsed.symbol.length;
-                const start = new vscode.Position(parsed.line, colStart);
-                const end = new vscode.Position(parsed.line, colEnd);
-                const location = new vscode.Location(vscode.Uri.file(parsed.path),
-                                                    new vscode.Range(start, end));
-                const kind = parseSymbolKind(parsed);
-                ret.push(new vscode.SymbolInformation(parsed.symbol,
-                                                      kind,
-                                                      "", // container name, we don't support this feature
-                                                      location));
-            } catch (e) {
-                console.log(e);
-            }
+        return mapNoneEmpty(lines, (line) => {
+            const xref = XRef.fromGlobalOutput(line);
+            return new vscode.SymbolInformation(xref.symbol,
+                                                xref.symbolKind,
+                                                "", // container name, we don't support it
+                                                xref.location);
         });
-        return ret;
-    }
-
-    /* Convert gnu global --cxref output to vscode.Location */
-    private convertXFormatLinesToLocations(lines: string[]): vscode.Location[] {
-        let ret: vscode.Location[] = [];
-        lines.forEach((line) => {
-            if (!line.length)
-                return; // empty line
-            try {
-                const parsed = parseXFormat(line);
-                const colStart = parsed.info.indexOf(parsed.symbol);
-                const colEnd = colStart + parsed.symbol.length;
-                const start = new vscode.Position(parsed.line, colStart);
-                const end = new vscode.Position(parsed.line, colEnd);
-                const location = new vscode.Location(vscode.Uri.file(parsed.path),
-                                                    new vscode.Range(start, end));
-                ret.push(location);
-            } catch (e) {
-                console.log(e);
-            }
-        });
-        return ret;
     }
 
     /* Execute 'global args' and return stdout with line split */
@@ -153,10 +154,10 @@ export default class Global {
             env: env
         };
 
-        let ret = spawnSync(this.executable, args, options);
-        if (ret.error) {
-            throw ret.error;
+        let sync = spawnSync(this.executable, args, options);
+        if (sync.error) {
+            throw sync.error;
         }
-        return ret.stdout.toString().split(/\r?\n/);
+        return sync.stdout.toString().split(/\r?\n/);
     }
 }

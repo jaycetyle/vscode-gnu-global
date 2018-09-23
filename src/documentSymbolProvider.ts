@@ -1,7 +1,7 @@
 import * as vscode from 'vscode';
 import Global from './global';
 
-export default class DocumentSymbolProvider implements vscode.DocumentSymbolProvider {
+export default class GlobalDocumentSymbolProvider implements vscode.DocumentSymbolProvider {
     global: Global;
 
     constructor(global: Global) {

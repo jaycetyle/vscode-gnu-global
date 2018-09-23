@@ -1,7 +1,7 @@
 import * as vscode from 'vscode';
 import Global from './global';
 
-export default class DefinitionProvider implements vscode.DefinitionProvider {
+export default class GlobalDefinitionProvider implements vscode.DefinitionProvider {
     global: Global;
 
     constructor(global: Global) {

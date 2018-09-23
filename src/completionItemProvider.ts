@@ -1,7 +1,7 @@
 import * as vscode from 'vscode';
 import Global from './global';
 
-export default class CompletionItemProvider implements vscode.CompletionItemProvider {
+export default class GlobalCompletionItemProvider implements vscode.CompletionItemProvider {
     global: Global;
 
     constructor(global: Global) {
