@@ -26,6 +26,7 @@ class XRef {
         this.info = info;
     }
 
+    /* Parse global xref(-x) output line and return XRef structure */
     static fromGlobalOutput(line: string): XRef {
         let tokens = line.split(/ +/);
         const symbol = tokens.shift();
@@ -149,7 +150,7 @@ export default class Global {
         this.execute(['-u'], path.dirname(document.fileName));
     }
 
-    gtagsSize(filepath: string): number {
+    getGtagsSize(filepath: string): number {
         let cwd = filepath;
         if (!fs.lstatSync(cwd).isDirectory()) {
             cwd = path.dirname(cwd);

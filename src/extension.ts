@@ -35,7 +35,7 @@ function onShowGlobalVersion() {
         vscode.window.showInformationMessage(global.getVersion());
     } catch (e) {
         console.error(e.toString());
-        vscode.window.showInformationMessage('Failed to run get GNU Global version');
+        vscode.window.showInformationMessage('Failed to get GNU Global version');
     }
 }
 
@@ -45,7 +45,7 @@ function checkConfigAndUpdateTags(doc: vscode.TextDocument) {
         return;
     } else if (autoUpdate == BoolDefault.Default) {
         /* Default: disable autoupdate if GTAGS size is larger than 50MB. */
-        const size = global.gtagsSize(doc.fileName);
+        const size = global.getGtagsSize(doc.fileName);
         if (size >= 50*1024*1024)
             return;
     }
