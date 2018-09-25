@@ -1,7 +1,5 @@
 import * as vscode from 'vscode';
 
-const globalConfigSection = 'gnuglobal'
-
 export enum BoolDefault {
     Enabled,
     Disabled,
@@ -9,9 +7,11 @@ export enum BoolDefault {
 }
 
 export default class GlobalConfiguration {
-
+    private get configurations(): vscode.WorkspaceConfiguration {
+        return vscode.workspace.getConfiguration('gnuglobal');
+    }
     private getBoolDefaultOption(name: string): BoolDefault {
-        const val = vscode.workspace.getConfiguration(globalConfigSection).get<string>(name, 'Default');
+        const val = this.configurations.get<string>(name, 'Default');
         switch (val) {
         case 'Enabled':
             return BoolDefault.Enabled;
