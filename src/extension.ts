@@ -17,6 +17,7 @@ export function activate(context: vscode.ExtensionContext) {
 
     console.log('"vscode-gnu-global" is now active!');
 
+    updateExecutablePath();
     disposables.push(vscode.commands.registerCommand('extension.showGlobalVersion',
                      onShowGlobalVersion));
     disposables.push(vscode.languages.registerDefinitionProvider(['cpp', 'c'],
@@ -28,6 +29,7 @@ export function activate(context: vscode.ExtensionContext) {
     disposables.push(vscode.languages.registerDocumentSymbolProvider(['cpp', 'c'],
                      new DocumentSymbolProvider(global)));
     disposables.push(vscode.workspace.onDidSaveTextDocument(doc => onDidSaveTextDocument(doc)));
+    disposables.push(vscode.workspace.onDidChangeConfiguration(event => onDidChangeConfiguration(event)));
 }
 
 function onShowGlobalVersion() {
@@ -52,12 +54,27 @@ function checkConfigAndUpdateTags(doc: vscode.TextDocument) {
     global.updateTags(doc);
 }
 
+function updateExecutablePath() {
+    const path = configuration.globalPath;
+    if (path) {
+        global.executable = path;
+    }
+}
+
 function onDidSaveTextDocument(doc: vscode.TextDocument) {
     try {
         if (doc.languageId !== "cpp" && doc.languageId !== "c")
             return;
 
         checkConfigAndUpdateTags(doc);
+    } catch (e) {
+        console.error(e.toString());
+    }
+}
+
+function onDidChangeConfiguration(event: vscode.ConfigurationChangeEvent) {
+    try {
+        updateExecutablePath();
     } catch (e) {
         console.error(e.toString());
     }

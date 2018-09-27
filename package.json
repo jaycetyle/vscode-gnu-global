@@ -28,6 +28,11 @@
                     "default": "Default",
                     "scope": "resource",
                     "description": "Controls whether global should automatically update the tags after file saved. \"Default\": disable autoupdate if GTAGS database size is larger than 50MB. It is recommended to disable this feature if the project is too large."
+                },
+                "gnuGlobal.globalPath": {
+                    "type": ["string"],
+                    "default": "",
+                    "description": "Specify the path to the GNU global."
                 }
             }
         }
