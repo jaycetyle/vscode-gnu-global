@@ -22,7 +22,7 @@
         }],
         "configuration": {
             "properties": {
-                "gnuglobal.autoupdate": {
+                "gnuGlobal.autoUpdate": {
                     "type": ["string"],
                     "enum": ["Enabled", "Disabled", "Default"],
                     "default": "Default",

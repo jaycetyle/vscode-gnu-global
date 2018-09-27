@@ -8,7 +8,7 @@ export enum BoolDefault {
 
 export default class GlobalConfiguration {
     private get configurations(): vscode.WorkspaceConfiguration {
-        return vscode.workspace.getConfiguration('gnuglobal');
+        return vscode.workspace.getConfiguration('gnuGlobal');
     }
     private getBoolDefaultOption(name: string): BoolDefault {
         const val = this.configurations.get<string>(name, 'Default');
@@ -23,6 +23,6 @@ export default class GlobalConfiguration {
     }
 
     get autoUpdate(): BoolDefault {
-        return this.getBoolDefaultOption('autoupdate');
+        return this.getBoolDefaultOption('autoUpdate');
     }
 }
