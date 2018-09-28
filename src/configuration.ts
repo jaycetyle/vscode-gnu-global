@@ -1,10 +1,5 @@
 import * as vscode from 'vscode';
-
-export enum BoolDefault {
-    Enabled,
-    Disabled,
-    Default
-}
+import {BoolDefault} from './boolDefault';
 
 export default class GlobalConfiguration {
     private get configurations(): vscode.WorkspaceConfiguration {
