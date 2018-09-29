@@ -8,9 +8,9 @@ export default class GlobalConfigurationUpdater {
 
     constructor(global: Global,
                 autoUpdateHandler: AutoUpdateHandler) {
-        /* globalPath */
+        /* globalExecutable path */
         this.setters.push(() => {
-            const path = this.configuration.globalPath;
+            const path = this.configuration.globalExecutable;
             if (path) {
                 global.executable = path;
             }

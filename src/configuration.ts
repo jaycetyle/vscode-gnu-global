@@ -22,7 +22,7 @@ export default class GlobalConfiguration {
         return this.getBoolDefaultOption('autoUpdate');
     }
 
-    get globalPath(): string | undefined {
-        return this.configurations.get<string>('globalPath');
+    get globalExecutable(): string | undefined {
+        return this.configurations.get<string>('globalExecutable');
     }
 }
