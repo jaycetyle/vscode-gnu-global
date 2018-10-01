@@ -12,13 +12,14 @@
     ],
     "activationEvents": [
         "onLanguage:cpp",
-        "onLanguage:c"
+        "onLanguage:c",
+        "onCommand:extension.showGlobalVersion"
     ],
     "main": "./out/extension",
     "contributes": {
         "commands": [{
             "command": "extension.showGlobalVersion",
-            "title": "global: Show GNU GLOBAL Binary Version"
+            "title": "Global: Show GNU Global Version"
         }],
         "configuration": {
             "properties": {

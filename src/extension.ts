@@ -34,7 +34,7 @@ export function activate(context: vscode.ExtensionContext) {
                      new DocumentSymbolProvider(global)));
 
     disposables.push(vscode.commands.registerCommand('extension.showGlobalVersion',
-                     showVersionHandler.showGlobalVersion));
+                     showVersionHandler.showGlobalVersion, showVersionHandler));
     disposables.push(vscode.workspace.onDidSaveTextDocument(
                      doc => autoUpdateHandler.autoUpdateTags(doc)));
     disposables.push(vscode.workspace.onDidChangeConfiguration(
