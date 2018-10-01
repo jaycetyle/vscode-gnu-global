@@ -2,7 +2,7 @@
 import * as vscode from 'vscode';
 import Global from './global';
 import Gtags from './gtags';
-import ConfigurationUpdater from './configurationUpdater';
+import Configuration from './configuration';
 import AutoUpdateHandler from './autoUpdateHandler';
 import ShowVersionHandler from './showVersionHandler';
 import RebuildGtagsHandler from './rebuildGtagsHandler'
@@ -11,13 +11,15 @@ import ReferenceProvider from './referenceProvider'
 import CompletionItemProvider from './completionItemProvider'
 import DocumentSymbolProvider from './documentSymbolProvider'
 
+
 const global = new Global();
 const gtags = new Gtags();
 
-const autoUpdateHandler = new AutoUpdateHandler(global);
+const configuration = new Configuration(global);
+
+const autoUpdateHandler = new AutoUpdateHandler(global, configuration);
 const showVersionHandler = new ShowVersionHandler(global);
 const rebuildGtagsHandler = new RebuildGtagsHandler(gtags);
-const configurationUpdater = new ConfigurationUpdater(global, autoUpdateHandler);
 
 const disposables:vscode.Disposable[] = [];
 
@@ -27,7 +29,7 @@ export function activate(context: vscode.ExtensionContext) {
 
     console.log('"vscode-gnu-global" is now active!');
 
-    configurationUpdater.setAll();
+    configuration.applyWindowsScopeConfigs();
     disposables.push(vscode.languages.registerDefinitionProvider(['cpp', 'c'],
                      new DefinitionProvider(global)));
     disposables.push(vscode.languages.registerReferenceProvider(['cpp', 'c'],
@@ -42,9 +44,9 @@ export function activate(context: vscode.ExtensionContext) {
     disposables.push(vscode.commands.registerCommand('extension.rebuildGtags',
                      rebuildGtagsHandler.rebuildGtags, rebuildGtagsHandler));
     disposables.push(vscode.workspace.onDidSaveTextDocument(
-                     doc => autoUpdateHandler.autoUpdateTags(doc)));
+                     doc => autoUpdateHandler.autoUpdateTags(doc), autoUpdateHandler));
     disposables.push(vscode.workspace.onDidChangeConfiguration(
-                     () => configurationUpdater.setAll()));
+                     () => configuration.applyWindowsScopeConfigs(), configuration));
 }
 
 // This method is called when the extension is deactivated

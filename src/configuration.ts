@@ -1,28 +1,36 @@
 import * as vscode from 'vscode';
 import {BoolDefault} from './boolDefault';
+import Global from './global';
 
 export default class GlobalConfiguration {
-    private get configurations(): vscode.WorkspaceConfiguration {
-        return vscode.workspace.getConfiguration('gnuGlobal');
+    windowScopeSetters: (() => void ) [] = [];
+
+    constructor(global: Global) {
+        /* globalExecutable path */
+        this.windowScopeSetters.push(() => {
+            const path = this.getConfiguration().get<string>('globalExecutable');
+            if (path) {
+                global.executable = path;
+            }
+        });
     }
 
-    private getBoolDefaultOption(name: string): BoolDefault {
-        const val = this.configurations.get<string>(name, 'Default');
-        switch (val) {
-        case 'Enabled':
-            return BoolDefault.Enabled;
-        case 'Disabled':
-            return BoolDefault.Disabled;
-        default:
-            return BoolDefault.Default;
+    applyWindowsScopeConfigs() {
+        for (let set of this.windowScopeSetters) {
+            try {
+                set();
+            } catch (e) {
+                console.error(e);
+            }
         }
     }
 
-    get autoUpdate(): BoolDefault {
-        return this.getBoolDefaultOption('autoUpdate');
+    /* resource scope configurations */
+    getAutoUpdateMode(path: vscode.Uri): BoolDefault {
+        return this.getConfiguration(path).get<BoolDefault>('autoUpdate', BoolDefault.Default);
     }
 
-    get globalExecutable(): string | undefined {
-        return this.configurations.get<string>('globalExecutable');
+    private getConfiguration(resource?: vscode.Uri | undefined): vscode.WorkspaceConfiguration {
+        return vscode.workspace.getConfiguration('gnuGlobal', resource);
     }
 }
