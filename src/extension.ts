@@ -1,18 +1,22 @@
 'use strict';
 import * as vscode from 'vscode';
 import Global from './global';
+import Gtags from './gtags';
 import ConfigurationUpdater from './configurationUpdater';
 import AutoUpdateHandler from './autoUpdateHandler';
 import ShowVersionHandler from './showVersionHandler';
+import RebuildGtagsHandler from './rebuildGtagsHandler'
 import DefinitionProvider from './definitionProvider'
 import ReferenceProvider from './referenceProvider'
 import CompletionItemProvider from './completionItemProvider'
 import DocumentSymbolProvider from './documentSymbolProvider'
 
 const global = new Global();
+const gtags = new Gtags();
 
 const autoUpdateHandler = new AutoUpdateHandler(global);
 const showVersionHandler = new ShowVersionHandler(global);
+const rebuildGtagsHandler = new RebuildGtagsHandler(gtags);
 const configurationUpdater = new ConfigurationUpdater(global, autoUpdateHandler);
 
 const disposables:vscode.Disposable[] = [];
@@ -35,6 +39,8 @@ export function activate(context: vscode.ExtensionContext) {
 
     disposables.push(vscode.commands.registerCommand('extension.showGlobalVersion',
                      showVersionHandler.showGlobalVersion, showVersionHandler));
+    disposables.push(vscode.commands.registerCommand('extension.rebuildGtags',
+                     rebuildGtagsHandler.rebuildGtags, rebuildGtagsHandler));
     disposables.push(vscode.workspace.onDidSaveTextDocument(
                      doc => autoUpdateHandler.autoUpdateTags(doc)));
     disposables.push(vscode.workspace.onDidChangeConfiguration(

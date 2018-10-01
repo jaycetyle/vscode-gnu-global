@@ -13,13 +13,17 @@
     "activationEvents": [
         "onLanguage:cpp",
         "onLanguage:c",
-        "onCommand:extension.showGlobalVersion"
+        "onCommand:extension.showGlobalVersion",
+        "onCommand:extension.rebuildGtags"
     ],
     "main": "./out/extension",
     "contributes": {
         "commands": [{
             "command": "extension.showGlobalVersion",
             "title": "Global: Show GNU Global Version"
+        },{
+            "command": "extension.rebuildGtags",
+            "title": "Global: Rebuild Gtags Database"
         }],
         "configuration": {
             "properties": {
