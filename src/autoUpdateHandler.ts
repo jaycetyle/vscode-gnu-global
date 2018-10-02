@@ -1,7 +1,7 @@
 import * as vscode from 'vscode';
 import Global from './global';
 import Configuration from './configuration'
-import {BoolDefault} from './boolDefault'
+import {BoolDefault} from './configuration'
 
 export default class GlobalAutoUpdateHandler {
     global: Global;

@@ -1,6 +1,11 @@
 import * as vscode from 'vscode';
-import {BoolDefault} from './boolDefault';
 import Global from './global';
+
+export enum BoolDefault {
+    Enabled,
+    Disabled,
+    Default
+}
 
 export default class GlobalConfiguration {
     windowScopeSetters: (() => void ) [] = [];
