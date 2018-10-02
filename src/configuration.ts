@@ -1,5 +1,4 @@
 import * as vscode from 'vscode';
-import Global from './global';
 
 export enum BoolDefault {
     Enabled,
@@ -10,17 +9,7 @@ export enum BoolDefault {
 export default class GlobalConfiguration {
     windowScopeSetters: (() => void ) [] = [];
 
-    constructor(global: Global) {
-        /* globalExecutable path */
-        this.windowScopeSetters.push(() => {
-            const path = this.getConfiguration().get<string>('globalExecutable');
-            if (path) {
-                global.executable = path;
-            }
-        });
-    }
-
-    applyWindowsScopeConfigs() {
+    applyWindowScopeConfigs() {
         for (let set of this.windowScopeSetters) {
             try {
                 set();
@@ -30,12 +19,12 @@ export default class GlobalConfiguration {
         }
     }
 
+    getConfiguration(resource?: vscode.Uri | undefined): vscode.WorkspaceConfiguration {
+        return vscode.workspace.getConfiguration('gnuGlobal', resource);
+    }
+
     /* resource scope configurations */
     getAutoUpdateMode(path: vscode.Uri): BoolDefault {
         return this.getConfiguration(path).get<BoolDefault>('autoUpdate', BoolDefault.Default);
-    }
-
-    private getConfiguration(resource?: vscode.Uri | undefined): vscode.WorkspaceConfiguration {
-        return vscode.workspace.getConfiguration('gnuGlobal', resource);
     }
 }
