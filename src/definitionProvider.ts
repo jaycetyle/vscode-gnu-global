@@ -1,5 +1,5 @@
 import * as vscode from 'vscode';
-import Global from './global';
+import Global from './global/global';
 
 export default class GlobalDefinitionProvider implements vscode.DefinitionProvider {
     global: Global;

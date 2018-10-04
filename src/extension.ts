@@ -1,7 +1,7 @@
 'use strict';
 import * as vscode from 'vscode';
-import Global from './global';
-import Gtags from './gtags';
+import Global from './global/global';
+import Gtags from './global/gtags';
 import Configuration from './configuration';
 import AutoUpdateHandler from './autoUpdateHandler';
 import ShowVersionHandler from './showVersionHandler';

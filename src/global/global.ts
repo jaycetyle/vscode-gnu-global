@@ -1,8 +1,7 @@
+import executableBase from './executableBase'
 import * as vscode from 'vscode';
 import * as path from 'path';
 import * as fs from 'fs';
-
-const spawnSync = require('child_process').spawnSync;
 
 /*
  * Parsed gnu global output with -x option
@@ -96,11 +95,9 @@ function mapNoneEmpty<T>(lines: string[], callbackfn: (value: string) => T|undef
     return ret;
 }
 
-export default class Global {
-    executable: string;         // Executable name. Default: global
-
+export default class Global extends executableBase {
     constructor(executable: string = 'global') {
-        this.executable = executable;
+        super(executable);
     }
 
     getVersion(): string {
@@ -157,22 +154,5 @@ export default class Global {
         }
         let gtagsPath = path.join(this.execute(['-p'], cwd)[0], "GTAGS");
         return fs.lstatSync(gtagsPath).size;
-    }
-
-    /* Execute 'global args' and return stdout with line split */
-    private execute(args: string[],
-                    cwd: string|undefined = undefined,
-                    env: any = null)
-                    : string[] {
-        const options = {
-            cwd: cwd,
-            env: env
-        };
-
-        let sync = spawnSync(this.executable, args, options);
-        if (sync.error) {
-            throw sync.error;
-        }
-        return sync.stdout.toString().split(/\r?\n/);
     }
 }

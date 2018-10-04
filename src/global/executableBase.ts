@@ -1,18 +1,14 @@
 const spawnSync = require('child_process').spawnSync;
 
-export default class Gtags {
-    executable: string;         // Executable name. Default: gtags
+export default class ExecutableBase {
+    executable: string; // Executable name/path
 
-    constructor(executable: string = 'gtags') {
+    constructor(executable: string) {
         this.executable = executable;
     }
 
-    rebuildTags(folder: string) {
-        this.execute([], folder);
-    }
-
     /* Execute 'gtags args' and return stdout with line split */
-    private execute(args: string[],
+    protected execute(args: string[],
                     cwd: string|undefined = undefined,
                     env: any = null)
                     : string[] {

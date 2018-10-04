@@ -1,5 +1,5 @@
 import * as vscode from 'vscode';
-import Gtags from './gtags';
+import Gtags from './global/gtags';
 
 export default class GlobalRebuildGtags {
     gtags: Gtags;
