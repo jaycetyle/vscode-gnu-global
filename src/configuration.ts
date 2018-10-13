@@ -1,9 +1,9 @@
 import * as vscode from 'vscode';
 
 export enum BoolDefault {
-    Enabled,
-    Disabled,
-    Default
+    Enabled = "Enabled",
+    Disabled = "Disabled",
+    Default = "Default"
 }
 
 export enum BoolOption {
@@ -30,7 +30,12 @@ export default class GlobalConfiguration {
 
     /* resource scope configurations */
     getAutoUpdateMode(path: vscode.Uri): BoolDefault {
-        return this.getConfiguration(path).get<BoolDefault>('autoUpdate', BoolDefault.Default);
+        const ret = this.getConfiguration(path).get<BoolDefault>('autoUpdate', BoolDefault.Default);
+        if (ret in BoolDefault) {
+            return ret;
+        } else {
+            return BoolDefault.Default;
+        }
     }
 
     getCompletionMode(path: vscode.Uri): BoolOption {
