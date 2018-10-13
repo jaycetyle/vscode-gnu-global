@@ -37,6 +37,8 @@ GNU Global is a tagging system. There's no language service running on the backg
 
 * `gnuGlobal.autoUpdate`: Controls whether global should automatically update the tags after file saved. Can be **Enabled**, **Disabled** and **Default**. **Default**: disable autoupdate if GTAGS database size is larger than 50MB. It is recommended to disable this feature if the project is too large.
 
+* `gnuGlobal.completion`: Enable/disable auto-completion feature. Default is enabled.
+
 * `gnuGlobal.globalExecutable`: Specify the path to the global.
 
 * `gnuGlobal.gtagsExecutable`: Specify the path to the gtags.

@@ -6,6 +6,11 @@ export enum BoolDefault {
     Default
 }
 
+export enum BoolOption {
+    Enabled = "Enabled",
+    Disabled = "Disabled"
+}
+
 export default class GlobalConfiguration {
     windowScopeSetters: (() => void ) [] = [];
 
@@ -26,5 +31,14 @@ export default class GlobalConfiguration {
     /* resource scope configurations */
     getAutoUpdateMode(path: vscode.Uri): BoolDefault {
         return this.getConfiguration(path).get<BoolDefault>('autoUpdate', BoolDefault.Default);
+    }
+
+    getCompletionMode(path: vscode.Uri): BoolOption {
+        const ret = this.getConfiguration(path).get<BoolOption>('completion', BoolOption.Enabled);
+        if (ret in BoolOption) {
+            return ret;
+        } else {
+            return BoolOption.Enabled;
+        }
     }
 }

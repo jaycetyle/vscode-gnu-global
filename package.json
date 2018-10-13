@@ -38,6 +38,13 @@
                     "scope": "resource",
                     "description": "Controls whether global should automatically update the tags after file saved. \"Default\": disable autoupdate if GTAGS database size is larger than 50MB. It is recommended to disable this feature if the project is too large."
                 },
+                "gnuGlobal.completion": {
+                    "type": ["string"],
+                    "enum": ["Enabled", "Disabled"],
+                    "default": "Enabled",
+                    "scope": "resource",
+                    "description": "Enable/disable auto-completion feature."
+                },
                 "gnuGlobal.globalExecutable": {
                     "type": ["string"],
                     "default": "",

@@ -37,7 +37,7 @@ export function activate(context: vscode.ExtensionContext) {
     disposables.push(vscode.languages.registerReferenceProvider(['cpp', 'c'],
                      new ReferenceProvider(global)));
     disposables.push(vscode.languages.registerCompletionItemProvider(['cpp', 'c'],
-                     new CompletionItemProvider(global)));
+                     new CompletionItemProvider(global, configuration)));
     disposables.push(vscode.languages.registerDocumentSymbolProvider(['cpp', 'c'],
                      new DocumentSymbolProvider(global)));
 
