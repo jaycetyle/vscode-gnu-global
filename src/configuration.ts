@@ -46,4 +46,13 @@ export default class GlobalConfiguration {
             return BoolOption.Enabled;
         }
     }
+
+    getGtagsForceCpp(path: vscode.Uri): BoolOption {
+        const ret = this.getConfiguration(path).get<BoolOption>('gtagsForceCpp', BoolOption.Disabled);
+        if (ret in BoolOption) {
+            return ret;
+        } else {
+            return BoolOption.Disabled;
+        }
+    }
 }

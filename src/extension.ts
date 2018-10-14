@@ -11,11 +11,10 @@ import ReferenceProvider from './referenceProvider'
 import CompletionItemProvider from './completionItemProvider'
 import DocumentSymbolProvider from './documentSymbolProvider'
 
-
-const global = new Global();
-const gtags = new Gtags();
-
 const configuration = new Configuration();
+
+const global = new Global(configuration);
+const gtags = new Gtags(configuration);
 
 const autoUpdateHandler = new AutoUpdateHandler(global, configuration);
 const showVersionHandler = new ShowVersionHandler(global);

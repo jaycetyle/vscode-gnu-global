@@ -46,6 +46,13 @@
                     "scope": "resource",
                     "description": "Enable/disable auto-completion feature."
                 },
+                "gnuGlobal.gtagsForceCpp": {
+                    "type": ["string"],
+                    "enum": ["Enabled", "Disabled"],
+                    "default": "Disabled",
+                    "scope": "resource",
+                    "description": "If this option is enabled, each file whose suffix is \".h\" is treated as a C++ source file. You need to rebuild gtags if you change this configuration."
+                },
                 "gnuGlobal.globalExecutable": {
                     "type": ["string"],
                     "default": "",

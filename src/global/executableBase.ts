@@ -1,10 +1,14 @@
+import Configuration from '../configuration'
+
 const spawnSync = require('child_process').spawnSync;
 
 export default class ExecutableBase {
     executable: string; // Executable name/path
+    configuration: Configuration;
 
-    constructor(executable: string) {
+    constructor(executable: string, configuration: Configuration) {
         this.executable = executable;
+        this.configuration = configuration;
     }
 
     /* Execute 'gtags args' and return stdout with line split */

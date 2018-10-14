@@ -39,6 +39,8 @@ GNU Global is a tagging system. There's no language service running on the backg
 
 * `gnuGlobal.completion`: Enable/disable auto-completion feature. Default is enabled.
 
+* `gnuGlobal.gtagsForceCpp`: If this option is enabled, each file whose suffix is \".h\" is treated as a C++ source file. You need to rebuild gtags if you change this configuration. Default is disabled.
+
 * `gnuGlobal.globalExecutable`: Specify the path to the global.
 
 * `gnuGlobal.gtagsExecutable`: Specify the path to the gtags.

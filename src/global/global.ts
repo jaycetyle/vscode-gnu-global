@@ -1,4 +1,5 @@
 import executableBase from './executableBase'
+import Configuration from '../configuration'
 import * as vscode from 'vscode';
 import * as path from 'path';
 import * as fs from 'fs';
@@ -96,8 +97,8 @@ function mapNoneEmpty<T>(lines: string[], callbackfn: (value: string) => T|undef
 }
 
 export default class Global extends executableBase {
-    constructor(executable: string = 'global') {
-        super(executable);
+    constructor(configuration: Configuration) {
+        super('global', configuration);
     }
 
     getVersion(): string {
