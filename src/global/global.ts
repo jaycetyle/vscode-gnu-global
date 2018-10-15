@@ -98,7 +98,11 @@ function mapNoneEmpty<T>(lines: string[], callbackfn: (value: string) => T|undef
 
 export default class Global extends executableBase {
     constructor(configuration: Configuration) {
-        super('global', configuration);
+        super(configuration);
+    }
+
+    get executable(): string {
+        return this.configuration.getGlobalExecutable();
     }
 
     getVersion(): string {

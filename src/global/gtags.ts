@@ -4,7 +4,11 @@ import * as vscode from 'vscode';
 
 export default class Gtags extends ExecutableBase {
     constructor(configuration: Configuration) {
-        super('gtags', configuration);
+        super(configuration);
+    }
+
+    get executable(): string {
+        return this.configuration.getGtagsExecutable();
     }
 
     rebuildTags(folder: string) {

@@ -55,12 +55,12 @@
                 },
                 "gnuGlobal.globalExecutable": {
                     "type": ["string"],
-                    "default": "",
+                    "default": "global",
                     "description": "Specify the path to the global."
                 },
                 "gnuGlobal.gtagsExecutable": {
                     "type": ["string"],
-                    "default": "",
+                    "default": "gtags",
                     "description": "Specify the path to the gtags."
                 }
             }

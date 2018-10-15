@@ -28,9 +28,6 @@ export function activate(context: vscode.ExtensionContext) {
 
     console.log('"vscode-gnu-global" is now active!');
 
-    initWindowScopeSetters(configuration);
-    configuration.applyWindowScopeConfigs();
-
     disposables.push(vscode.languages.registerDefinitionProvider(['cpp', 'c'],
                      new DefinitionProvider(global)));
     disposables.push(vscode.languages.registerReferenceProvider(['cpp', 'c'],
@@ -46,34 +43,9 @@ export function activate(context: vscode.ExtensionContext) {
                      rebuildGtagsHandler.rebuildGtags, rebuildGtagsHandler));
     disposables.push(vscode.workspace.onDidSaveTextDocument(
                      doc => autoUpdateHandler.autoUpdateTags(doc), autoUpdateHandler));
-    disposables.push(vscode.workspace.onDidChangeConfiguration(
-                     () => configuration.applyWindowScopeConfigs(), configuration));
 }
 
 // This method is called when the extension is deactivated
 export function deactivate() {
     disposables.forEach(d => d.dispose());
-}
-
-function initWindowScopeSetters(config: Configuration) {
-    let windowScopeSetters: (() => void ) [] = [];
-
-    windowScopeSetters.push(
-        /* globalExecutable */
-        function() {
-            const path = config.getConfiguration().get<string>('globalExecutable');
-            if (path) {
-                global.executable = path;
-            }
-        },
-        /* gtagsExecutable */
-        function() {
-            const path = config.getConfiguration().get<string>('gtagsExecutable');
-            if (path) {
-                gtags.executable = path;
-            }
-        }
-    );
-
-    config.windowScopeSetters = windowScopeSetters;
 }

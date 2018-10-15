@@ -12,47 +12,43 @@ export enum BoolOption {
 }
 
 export default class GlobalConfiguration {
-    windowScopeSetters: (() => void ) [] = [];
+    private getConfiguration(resource?: vscode.Uri | undefined): vscode.WorkspaceConfiguration {
+        return vscode.workspace.getConfiguration('gnuGlobal', resource);
+    }
 
-    applyWindowScopeConfigs() {
-        for (let set of this.windowScopeSetters) {
-            try {
-                set();
-            } catch (e) {
-                console.error(e);
-            }
+    private getEnumConfiguration(section: string, type: any, defaultValue: string,
+                         resource?: vscode.Uri | undefined) {
+        if (!(defaultValue in type)) {
+            throw "BUG: type of default value doesn't match given type.";
+        }
+
+        const ret = this.getConfiguration(resource).get(section, defaultValue);
+        if (ret in type) {
+            return type[ret];
+        } else {
+            return type[defaultValue];
         }
     }
 
-    getConfiguration(resource?: vscode.Uri | undefined): vscode.WorkspaceConfiguration {
-        return vscode.workspace.getConfiguration('gnuGlobal', resource);
+    /* window scope configurations */
+    getGlobalExecutable(): string {
+        return this.getConfiguration().get<string>('globalExecutable', 'global');
+    }
+
+    getGtagsExecutable(): string {
+        return this.getConfiguration().get<string>('gtagsExecutable', 'gtags');
     }
 
     /* resource scope configurations */
     getAutoUpdateMode(path: vscode.Uri): BoolDefault {
-        const ret = this.getConfiguration(path).get<BoolDefault>('autoUpdate', BoolDefault.Default);
-        if (ret in BoolDefault) {
-            return ret;
-        } else {
-            return BoolDefault.Default;
-        }
+        return this.getEnumConfiguration('autoUpdate', BoolDefault, BoolDefault.Default, path);
     }
 
     getCompletionMode(path: vscode.Uri): BoolOption {
-        const ret = this.getConfiguration(path).get<BoolOption>('completion', BoolOption.Enabled);
-        if (ret in BoolOption) {
-            return ret;
-        } else {
-            return BoolOption.Enabled;
-        }
+        return this.getEnumConfiguration('completion', BoolOption, BoolOption.Enabled, path);
     }
 
     getGtagsForceCpp(path: vscode.Uri): BoolOption {
-        const ret = this.getConfiguration(path).get<BoolOption>('gtagsForceCpp', BoolOption.Disabled);
-        if (ret in BoolOption) {
-            return ret;
-        } else {
-            return BoolOption.Disabled;
-        }
+        return this.getEnumConfiguration('gtagsForceCpp', BoolOption, BoolOption.Disabled, path);
     }
 }
