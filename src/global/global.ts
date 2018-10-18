@@ -113,8 +113,9 @@ export default class Global extends executableBase {
                       position: vscode.Position)
                       : vscode.Location[] {
         const symbol = document.getText(document.getWordRangeAtPosition(position));
-        const lines = this.execute(['--encode-path', '" "', '-xa', symbol],
-                                   path.dirname(document.fileName));
+        const lines = this.execute(['--encode-path', '" "', '-xaT', symbol],
+                                   path.dirname(document.fileName),
+                                   {'GTAGSLIBPATH': this.getLibPathEnvValue(document.uri)});
         return mapNoneEmpty(lines, line => XRef.fromGlobalOutput(line).location);
     }
 
@@ -131,7 +132,9 @@ export default class Global extends executableBase {
                            position: vscode.Position)
                            : vscode.CompletionItem[] {
         const symbol = document.getText(document.getWordRangeAtPosition(position));
-        const lines = this.execute(['-c', symbol], path.dirname(document.fileName));
+        const lines = this.execute(['-cT', symbol],
+                                   path.dirname(document.fileName),
+                                   {'GTAGSLIBPATH': this.getLibPathEnvValue(document.uri)});
         return mapNoneEmpty(lines, line => new vscode.CompletionItem(line));
     }
 
@@ -159,5 +162,10 @@ export default class Global extends executableBase {
         }
         let gtagsPath = path.join(this.execute(['-p'], cwd)[0], "GTAGS");
         return fs.lstatSync(gtagsPath).size;
+    }
+
+    private getLibPathEnvValue(docUri: vscode.Uri): string {
+        const paths = this.configuration.getLibraryPath(docUri);
+        return paths.join(path.delimiter);
     }
 }

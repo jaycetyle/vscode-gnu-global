@@ -17,7 +17,7 @@ export default class GlobalConfiguration {
     }
 
     private getEnumConfiguration(section: string, type: any, defaultValue: string,
-                         resource?: vscode.Uri | undefined) {
+                                 resource?: vscode.Uri | undefined) {
         if (!(defaultValue in type)) {
             throw "BUG: type of default value doesn't match given type.";
         }
@@ -50,5 +50,9 @@ export default class GlobalConfiguration {
 
     getGtagsForceCpp(path: vscode.Uri): BoolOption {
         return this.getEnumConfiguration('gtagsForceCpp', BoolOption, BoolOption.Disabled, path);
+    }
+
+    getLibraryPath(path: vscode.Uri): string[] {
+        return this.getConfiguration(path).get<string[]>('libraryPath', []);
     }
 }

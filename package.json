@@ -62,6 +62,11 @@
                     "type": ["string"],
                     "default": "gtags",
                     "description": "Specify the path to the gtags."
+                },
+                "gnuGlobal.libraryPath": {
+                    "type": ["array"],
+                    "scope": "resource",
+                    "description": "(Experimental) Used as the path to search for library functions. If the specified tags is not found in the project, this extension also searches in these paths. Please note that 'Rebuild Gtags Database' doesn't rebuild the tag files for these libraries. You need to build tags for them individually."
                 }
             }
         }
