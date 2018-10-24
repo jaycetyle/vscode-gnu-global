@@ -11,11 +11,11 @@ export default class Gtags extends ExecutableBase {
         return this.configuration.getGtagsExecutable();
     }
 
-    rebuildTags(folder: string) {
-        if (this.configuration.getGtagsForceCpp(vscode.Uri.parse(folder)) === BoolOption.Enabled) {
-            this.execute([], folder, { GTAGSFORCECPP: 1 });
+    rebuildTags(folder: vscode.Uri) {
+        if (this.configuration.getGtagsForceCpp(folder) === BoolOption.Enabled) {
+            this.execute([], folder.fsPath, { GTAGSFORCECPP: 1 });
         } else {
-            this.execute([], folder);
+            this.execute([], folder.fsPath);
         }
     }
 }

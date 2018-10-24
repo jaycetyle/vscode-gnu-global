@@ -17,7 +17,7 @@ export default class GlobalRebuildGtags {
         let errors: vscode.WorkspaceFolder[] = [];
         for (let folder of folders) {
             try {
-                this.gtags.rebuildTags(folder.uri.fsPath);
+                this.gtags.rebuildTags(folder.uri);
             } catch (e) {
                 errors.push(folder);
             }

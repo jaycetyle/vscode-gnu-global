@@ -13,7 +13,8 @@ export enum BoolOption {
 
 export default class GlobalConfiguration {
     private getConfiguration(resource?: vscode.Uri | undefined): vscode.WorkspaceConfiguration {
-        return vscode.workspace.getConfiguration('gnuGlobal', resource);
+        const config = vscode.workspace.getConfiguration('gnuGlobal', resource);
+        return config;
     }
 
     private getEnumConfiguration(section: string, type: any, defaultValue: string,
