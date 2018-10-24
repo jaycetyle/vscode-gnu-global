@@ -2,7 +2,7 @@
     "name": "vscode-gnu-global",
     "displayName": "C/C++ GNU Global",
     "description": "Intellisense for C/C++ using GNU Global",
-    "version": "0.2.1",
+    "version": "0.2.2",
     "publisher": "jaycetyle",
     "preview": true,
     "repository": {

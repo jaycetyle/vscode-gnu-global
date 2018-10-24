@@ -1,5 +1,11 @@
 # Change Log
 
+## [0.2.2] - 2018-10-24
+
+* Added gtagsForceCpp configuration to force gtags treat .h as a C++ source file
+* Added libraryPath configuration for searching library functions
+* Some code refactoring and README revision
+
 ## [0.2.1] - 2018-10-13
 
 Fixed
@@ -8,7 +14,7 @@ Fixed
 
 Added
 
-* Added new configuration to disable/enable completion feature
+* Added completion configuration to disable/enable completion feature
 
 
 ## [0.2.0] - 2018-10-04
