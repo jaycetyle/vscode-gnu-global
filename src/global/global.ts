@@ -38,11 +38,11 @@ class XRef {
             return new XRef (
                 symbol,
                 lineNo ? parseInt(lineNo) - 1 : 0,
-                path ? path.replace("%20", " ") : path,
+                path ? path.replace('%20', ' ') : path,
                 info
             )
         }
-        throw "Parse xref output failed: " + line;
+        throw 'Parse xref output failed: ' + line;
     }
 
     /*
@@ -113,9 +113,7 @@ export default class Global extends executableBase {
                       position: vscode.Position)
                       : vscode.Location[] {
         const symbol = document.getText(document.getWordRangeAtPosition(position));
-        const lines = this.execute(['--encode-path', '" "', '-xaT', symbol],
-                                   path.dirname(document.fileName),
-                                   {'GTAGSLIBPATH': this.getLibPathEnvValue(document.uri)});
+        const lines = this.executeOnDocument(['--encode-path', '" "', '-xaT', symbol], document);
         return mapNoneEmpty(lines, line => XRef.fromGlobalOutput(line).location);
     }
 
@@ -123,8 +121,7 @@ export default class Global extends executableBase {
                       position: vscode.Position)
                       : vscode.Location[] {
         const symbol = document.getText(document.getWordRangeAtPosition(position));
-        const lines = this.execute(['--encode-path', '" "', '-xra', symbol],
-                                   path.dirname(document.fileName));
+        const lines = this.executeOnDocument(['--encode-path', '" "', '-xra', symbol], document);
         return mapNoneEmpty(lines, line => XRef.fromGlobalOutput(line).location);
     }
 
@@ -132,21 +129,18 @@ export default class Global extends executableBase {
                            position: vscode.Position)
                            : vscode.CompletionItem[] {
         const symbol = document.getText(document.getWordRangeAtPosition(position));
-        const lines = this.execute(['-cT', symbol],
-                                   path.dirname(document.fileName),
-                                   {'GTAGSLIBPATH': this.getLibPathEnvValue(document.uri)});
+        const lines = this.executeOnDocument(['-cT', symbol], document);
         return mapNoneEmpty(lines, line => new vscode.CompletionItem(line));
     }
 
     provideDocumentSymbols(document: vscode.TextDocument)
                            : vscode.SymbolInformation[] {
-        const lines = this.execute(['--encode-path', '" "', '-xaf', document.fileName],
-                                   path.dirname(document.fileName));
+        const lines = this.executeOnDocument(['--encode-path', '" "', '-xaf', document.fileName], document);
         return mapNoneEmpty(lines, (line) => {
             const xref = XRef.fromGlobalOutput(line);
             return new vscode.SymbolInformation(xref.symbol,
                                                 xref.symbolKind,
-                                                "", // container name, we don't support it
+                                                '', // container name, we don't support it
                                                 xref.location);
         });
     }
@@ -160,12 +154,20 @@ export default class Global extends executableBase {
         if (!fs.lstatSync(cwd).isDirectory()) {
             cwd = path.dirname(cwd);
         }
-        let gtagsPath = path.join(this.execute(['-p'], cwd)[0], "GTAGS");
+        let gtagsPath = path.join(this.execute(['-p'], cwd)[0], 'GTAGS');
         return fs.lstatSync(gtagsPath).size;
     }
 
     private getLibPathEnvValue(docUri: vscode.Uri): string {
         const paths = this.configuration.getLibraryPath(docUri);
         return paths.join(path.delimiter);
+    }
+
+    private executeOnDocument(args: string[], document: vscode.TextDocument) : string[] {
+        const env = {
+            'GTAGSLIBPATH': this.getLibPathEnvValue(document.uri)
+        };
+
+        return this.execute(args, path.dirname(document.fileName), env);
     }
 }
