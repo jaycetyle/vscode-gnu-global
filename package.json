@@ -9,6 +9,7 @@
         "type": "git",
         "url": "https://github.com/jaycetyle/vscode-gnu-global/"
     },
+    "icon": "images/icon128.png",
     "engines": {
         "vscode": "^1.27.0"
     },
