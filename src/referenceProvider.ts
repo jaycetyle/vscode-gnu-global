@@ -8,7 +8,7 @@ export default class GlobalReferenceProvider implements vscode.ReferenceProvider
         this.global = global;
     }
 
-    public provideReferences(document: vscode.TextDocument, position: vscode.Position,
+    provideReferences(document: vscode.TextDocument, position: vscode.Position,
                              context: vscode.ReferenceContext, token: vscode.CancellationToken)
                              : vscode.ProviderResult<vscode.Location[]> {
         var self = this;

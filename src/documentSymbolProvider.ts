@@ -8,7 +8,7 @@ export default class GlobalDocumentSymbolProvider implements vscode.DocumentSymb
         this.global = global;
     }
 
-    public provideDocumentSymbols(document: vscode.TextDocument, token: vscode.CancellationToken)
+    provideDocumentSymbols(document: vscode.TextDocument, token: vscode.CancellationToken)
                                   : vscode.ProviderResult<vscode.SymbolInformation[] | vscode.DocumentSymbol[]> {
         var self = this;
         return new Promise<vscode.SymbolInformation[]>((resolve, reject) => {

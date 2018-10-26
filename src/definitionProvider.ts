@@ -8,7 +8,7 @@ export default class GlobalDefinitionProvider implements vscode.DefinitionProvid
         this.global = global;
     }
 
-    public provideDefinition(document: vscode.TextDocument, position: vscode.Position,
+    provideDefinition(document: vscode.TextDocument, position: vscode.Position,
                              token: vscode.CancellationToken)
                              : vscode.ProviderResult<vscode.Definition> {
         var self = this;
