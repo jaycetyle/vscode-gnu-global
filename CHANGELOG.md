@@ -1,10 +1,27 @@
 # Change Log
 
+## [0.2.3] - 2018-10-27
+
+Added
+
+* Add license announcement
+* NEW icon !
+* Pop out message to inform if tags rebuild succeeded or failed
+
+Revised
+
+* Some code refactoring and README revisions
+
 ## [0.2.2] - 2018-10-24
+
+Added
 
 * Added gtagsForceCpp configuration to force gtags treat .h as a C++ source file
 * Added libraryPath configuration for searching library functions
-* Some code refactoring and README revision
+
+Revised
+
+* Some code refactoring and README revisions
 
 ## [0.2.1] - 2018-10-13
 
@@ -16,12 +33,11 @@ Added
 
 * Added completion configuration to disable/enable completion feature
 
-
 ## [0.2.0] - 2018-10-04
 
-Fixed
+Revised
 
-* Some code refactoring and README revision
+* Some code refactoring and README revisions
 
 ## [0.1.0] - 2018-10-03
 
