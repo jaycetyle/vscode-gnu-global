@@ -24,6 +24,8 @@ export default abstract class ExecutableBase {
         let sync = spawnSync(this.executable, args, options);
         if (sync.error) {
             throw sync.error;
+        } else if (0 != sync.status) {
+            throw sync.stderr.toString();
         }
         return sync.stdout.toString().split(/\r?\n/);
     }

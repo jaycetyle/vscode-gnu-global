@@ -14,13 +14,19 @@ export default class GlobalRebuildGtags {
             return;
         }
 
-        let errors: vscode.WorkspaceFolder[] = [];
+        let errors = [];
         for (let folder of folders) {
             try {
                 this.gtags.rebuildTags(folder.uri);
             } catch (e) {
-                errors.push(folder);
+                errors.push(folder.name);
             }
+        }
+
+        if (0 == errors.length) {
+            vscode.window.showInformationMessage('Build tag files successfully');
+        } else {
+            vscode.window.showErrorMessage("Failed to build tag files: " + errors);
         }
     }
 }
