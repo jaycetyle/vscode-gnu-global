@@ -2,14 +2,13 @@
     "name": "vscode-gnu-global",
     "displayName": "C/C++ GNU Global",
     "description": "Intellisense for C/C++ using GNU Global",
-    "version": "0.2.3",
+    "version": "0.2.4",
     "publisher": "jaycetyle",
     "preview": true,
     "repository": {
         "type": "git",
         "url": "https://github.com/jaycetyle/vscode-gnu-global/"
     },
-    "icon": "images/icon128.png",
     "engines": {
         "vscode": "^1.27.0"
     },
