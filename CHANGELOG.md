@@ -1,5 +1,16 @@
 # Change Log
 
+## [0.2.6] - 2018-11-24
+
+Added
+
+* Support non utf-8 encoding.
+
+Fixed
+
+* Path error if file path contains more than two spaces.
+
+
 ## [0.2.5] - 2018-11-18
 
 Fixed

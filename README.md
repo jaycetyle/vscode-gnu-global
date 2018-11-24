@@ -21,6 +21,15 @@ This extension is forked/rewriten from [C/C++ Intellisense](https://marketplace.
 
 * GNU Global is a tagging system. There's no language service running in the background. You need to press F1 and execute  `Global: Rebuild Gtags Database`  to generate tag files before you can use other features.
 
+* Specify the output encoding if you're using non-UTF8 Windows. You can find the supported encoding from https://github.com/ashtuchkin/iconv-lite/wiki/Supported-Encodings .
+
+    Ex: Big5 for Traditional Chinese on Windows
+    ```
+    {
+        "gnuGlobal.encoding": "Big5"
+    }
+    ```
+
 ## Command
 * `Global: Rebuild Gtags Database`
     * Generate tag files for global by running 'gtags'.
@@ -35,6 +44,10 @@ This extension is forked/rewriten from [C/C++ Intellisense](https://marketplace.
 * `Go to Symbol in File (Ctrl + Shift + O)`
 
 ## Configuration
+* `gnuGlobal.encoding`
+    * Specify the encoding of the command line output.
+    * Please refer to https://github.com/ashtuchkin/iconv-lite/wiki/Supported-Encodings for supported encodings.
+
 * `gnuGlobal.autoUpdate`
     * Controls whether global should automatically update the tags after file saved. Can be Enabled, Disabled and Default.
     * Default: disable autoupdate if GTAGS database size is larger than 50MB. It is recommended to disable this feature if the project is too large.
