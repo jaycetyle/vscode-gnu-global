@@ -40,6 +40,10 @@ export default class GlobalConfiguration {
         return this.getConfiguration().get<string>('gtagsExecutable', 'gtags');
     }
 
+    getEncoding(): string {
+        return this.getConfiguration().get<string>('encoding', 'utf-8');
+    }
+
     /* resource scope configurations */
     getAutoUpdateMode(path: vscode.Uri): BoolDefault {
         return this.getEnumConfiguration('autoUpdate', BoolDefault, BoolDefault.Default, path);

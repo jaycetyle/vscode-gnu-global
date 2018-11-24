@@ -38,7 +38,7 @@ class XRef {
             return new XRef (
                 symbol,
                 lineNo ? parseInt(lineNo) - 1 : 0,
-                path ? path.replace('%20', ' ') : path,
+                path ? path.replace(/%20/g, ' ') : path,
                 info
             )
         }

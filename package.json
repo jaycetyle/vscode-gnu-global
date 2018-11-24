@@ -68,6 +68,11 @@
                     "type": ["array"],
                     "scope": "resource",
                     "description": "(Experimental) Used as the path to search for library functions. If the specified tags is not found in the project, this extension also searches in these paths. Please note that 'Rebuild Gtags Database' doesn't rebuild the tag files for these libraries. You need to build tags for them individually."
+                },
+                "gnuGlobal.encoding": {
+                    "type": ["string"],
+                    "default": "utf-8",
+                    "description": "Specify the encoding of the command line output."
                 }
             }
         }
@@ -85,5 +90,8 @@
         "tslint": "^5.8.0",
         "@types/node": "^7.0.43",
         "@types/mocha": "^2.2.42"
+    },
+    "dependencies": {
+        "iconv-lite": "^0.4.24"
     }
 }

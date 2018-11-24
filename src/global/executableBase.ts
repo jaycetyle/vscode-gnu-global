@@ -1,4 +1,5 @@
 import Configuration from '../configuration'
+import * as iconv from 'iconv-lite';
 
 const spawnSync = require('child_process').spawnSync;
 
@@ -18,7 +19,8 @@ export default abstract class ExecutableBase {
                       : string[] {
         const options = {
             cwd: cwd,
-            env: env
+            env: env,
+            encoding: 'binary'
         };
 
         let sync = spawnSync(this.executable, args, options);
@@ -27,6 +29,8 @@ export default abstract class ExecutableBase {
         } else if (0 != sync.status) {
             throw sync.stderr.toString();
         }
-        return sync.stdout.toString().split(/\r?\n/);
+
+        const encoding = this.configuration.getEncoding();
+        return iconv.decode(Buffer.from(sync.stdout, 'binary'), encoding).split(/\r?\n/);
     }
 }
