@@ -24,53 +24,80 @@
     ],
     "main": "./out/extension",
     "contributes": {
-        "commands": [{
-            "command": "extension.showGlobalVersion",
-            "title": "Global: Show GNU Global Version"
-        },{
-            "command": "extension.rebuildGtags",
-            "title": "Global: Rebuild Gtags Database"
-        }],
+        "commands": [
+            {
+                "command": "extension.showGlobalVersion",
+                "title": "Global: Show GNU Global Version"
+            },
+            {
+                "command": "extension.rebuildGtags",
+                "title": "Global: Rebuild Gtags Database"
+            }
+        ],
         "configuration": {
             "properties": {
                 "gnuGlobal.autoUpdate": {
-                    "type": ["string"],
-                    "enum": ["Enabled", "Disabled", "Default"],
+                    "type": [
+                        "string"
+                    ],
+                    "enum": [
+                        "Enabled",
+                        "Disabled",
+                        "Default"
+                    ],
                     "default": "Default",
                     "scope": "resource",
                     "description": "Controls whether global should automatically update the tags after file saved. \"Default\": disable autoupdate if GTAGS database size is larger than 50MB. It is recommended to disable this feature if the project is too large."
                 },
                 "gnuGlobal.completion": {
-                    "type": ["string"],
-                    "enum": ["Enabled", "Disabled"],
+                    "type": [
+                        "string"
+                    ],
+                    "enum": [
+                        "Enabled",
+                        "Disabled"
+                    ],
                     "default": "Enabled",
                     "scope": "resource",
                     "description": "Enable/disable auto-completion feature."
                 },
                 "gnuGlobal.gtagsForceCpp": {
-                    "type": ["string"],
-                    "enum": ["Enabled", "Disabled"],
+                    "type": [
+                        "string"
+                    ],
+                    "enum": [
+                        "Enabled",
+                        "Disabled"
+                    ],
                     "default": "Disabled",
                     "scope": "resource",
                     "description": "If this option is enabled, each file whose suffix is \".h\" is treated as a C++ source file. You need to rebuild gtags if you change this configuration."
                 },
                 "gnuGlobal.globalExecutable": {
-                    "type": ["string"],
+                    "type": [
+                        "string"
+                    ],
                     "default": "global",
                     "description": "Specify the path to the global."
                 },
                 "gnuGlobal.gtagsExecutable": {
-                    "type": ["string"],
+                    "type": [
+                        "string"
+                    ],
                     "default": "gtags",
                     "description": "Specify the path to the gtags."
                 },
                 "gnuGlobal.libraryPath": {
-                    "type": ["array"],
+                    "type": [
+                        "array"
+                    ],
                     "scope": "resource",
                     "description": "(Experimental) Used as the path to search for library functions. If the specified tags is not found in the project, this extension also searches in these paths. Please note that 'Rebuild Gtags Database' doesn't rebuild the tag files for these libraries. You need to build tags for them individually."
                 },
                 "gnuGlobal.encoding": {
-                    "type": ["string"],
+                    "type": [
+                        "string"
+                    ],
                     "default": "utf-8",
                     "description": "Specify the encoding of the command line output."
                 }
@@ -85,13 +112,14 @@
         "test": "npm run compile && node ./node_modules/vscode/bin/test"
     },
     "devDependencies": {
-        "typescript": "^2.6.1",
-        "vscode": "^1.1.6",
-        "tslint": "^5.8.0",
-        "@types/node": "^7.0.43",
-        "@types/mocha": "^2.2.42"
+        "typescript": "^3.5.2",
+        "vscode": "^1.1.34",
+        "tslint": "^5.18.0",
+        "@types/node": "^12.0.10",
+        "@types/mocha": "^5.2.7"
     },
     "dependencies": {
-        "iconv-lite": "^0.4.24"
+        "iconv-lite": "^0.5.0",
+        "vsce": "^1.64.0"
     }
 }
