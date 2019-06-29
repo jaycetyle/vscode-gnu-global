@@ -12,10 +12,18 @@ export default class Gtags extends ExecutableBase {
     }
 
     rebuildTags(folder: vscode.Uri) {
+        var env;
         if (this.configuration.getGtagsForceCpp(folder) === BoolOption.Enabled) {
-            this.execute([], folder.fsPath, { GTAGSFORCECPP: 1 });
+            env = {
+                'GTAGSFORCECPP': 1,
+                'GTAGSOBJDIRPREFIX': this.configuration.getObjDirPrefix()
+            };
         } else {
-            this.execute([], folder.fsPath);
+            env = {
+                'GTAGSOBJDIRPREFIX': this.configuration.getObjDirPrefix()
+            };
         }
+        let opt = env.GTAGSOBJDIRPREFIX === "" ? [] : ['-O'];
+        this.execute(opt, folder.fsPath, env);
     }
 }

@@ -146,15 +146,11 @@ export default class Global extends executableBase {
     }
 
     updateTags(document: vscode.TextDocument) {
-        this.execute(['-u'], path.dirname(document.fileName));
+        this.executeOnDocument(['-u'], document);
     }
 
-    getGtagsSize(filepath: string): number {
-        let cwd = filepath;
-        if (!fs.lstatSync(cwd).isDirectory()) {
-            cwd = path.dirname(cwd);
-        }
-        let gtagsPath = path.join(this.execute(['-p'], cwd)[0], 'GTAGS');
+    getGtagsSize(document: vscode.TextDocument): number {
+        let gtagsPath = path.join(this.executeOnDocument(['-p'], document)[0], 'GTAGS');
         return fs.lstatSync(gtagsPath).size;
     }
 
@@ -165,7 +161,8 @@ export default class Global extends executableBase {
 
     private executeOnDocument(args: string[], document: vscode.TextDocument) : string[] {
         const env = {
-            'GTAGSLIBPATH': this.getLibPathEnvValue(document.uri)
+            'GTAGSLIBPATH': this.getLibPathEnvValue(document.uri),
+            'GTAGSOBJDIRPREFIX': this.configuration.getObjDirPrefix()
         };
 
         return this.execute(args, path.dirname(document.fileName), env);

@@ -23,7 +23,7 @@ export default class GlobalAutoUpdateHandler {
                 return;
             } else if (autoUpdateMode == BoolDefault.Default) {
                 /* Default: disable autoupdate if GTAGS size is larger than 50MB. */
-                const size = this.global.getGtagsSize(docChanged.fileName);
+                const size = this.global.getGtagsSize(docChanged);
                 if (size >= 50*1024*1024)
                     return;
             }

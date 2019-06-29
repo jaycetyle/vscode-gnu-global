@@ -1,5 +1,15 @@
 # Change Log
 
+## [0.2.7] - 2019-06-29
+
+Added
+
+* Support objDirPrefix
+
+Revised
+
+* Upgrade dependent modules
+
 ## [0.2.6] - 2018-11-24
 
 Added

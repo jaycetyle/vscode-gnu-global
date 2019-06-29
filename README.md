@@ -70,6 +70,11 @@ This extension is forked/rewriten from [C/C++ Intellisense](https://marketplace.
 * `gnuGlobal.gtagsExecutable`
     * Specify the path to the gtags. Default is 'gtags'.
 
+* `gnuGlobal.objDirPrefix`
+    * If objDirPrefix is set and objDirPrefix directory exists, gtags creates objDirPrefix/project_dir directory and makes tag files in it. Global will also try to search tag files in that directory.
+    * This option is useful if you don't wan't to create tag files in your project directory.
+    * Only support UNIX style filesystem so Windows is unsupported.
+
 ## Limitations
 
 GNU global doesn't do any AST parsing, so the auto completion doesn't understand class members and etc.

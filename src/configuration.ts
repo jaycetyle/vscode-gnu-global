@@ -60,4 +60,8 @@ export default class GlobalConfiguration {
     getLibraryPath(path: vscode.Uri): string[] {
         return this.getConfiguration(path).get<string[]>('libraryPath', []);
     }
+
+    getObjDirPrefix(): string {
+        return this.getConfiguration().get<string>('objDirPrefix', "");
+    }
 }

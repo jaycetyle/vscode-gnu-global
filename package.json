@@ -2,7 +2,7 @@
     "name": "vscode-gnu-global",
     "displayName": "C/C++ GNU Global",
     "description": "Intellisense for C/C++ using GNU Global",
-    "version": "0.2.6",
+    "version": "0.2.7",
     "publisher": "jaycetyle",
     "preview": true,
     "repository": {
@@ -100,6 +100,14 @@
                     ],
                     "default": "utf-8",
                     "description": "Specify the encoding of the command line output."
+                },
+                "gnuGlobal.objDirPrefix": {
+                    "type": [
+                        "string"
+                    ],
+                    "default": "",
+                    "scope": "window",
+                    "description": "If objDirPrefix is set and objDirPrefix directory exists, gtags creates objDirPrefix/project_dir directory and makes tag files in it. Global will also try to search tag files in such directory. Only support UNIX style filesystem. Windows is not supported."
                 }
             }
         }
