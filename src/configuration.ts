@@ -11,6 +11,13 @@ export enum BoolOption {
     Disabled = "Disabled"
 }
 
+export enum GtagsSkipSymlinkOption {
+    None = "None",
+    File = "File",
+    Directory = "Directory",
+    All = "All"
+}
+
 export default class GlobalConfiguration {
     private getConfiguration(resource?: vscode.Uri | undefined): vscode.WorkspaceConfiguration {
         const config = vscode.workspace.getConfiguration('gnuGlobal', resource);
@@ -59,6 +66,10 @@ export default class GlobalConfiguration {
 
     getLibraryPath(path: vscode.Uri): string[] {
         return this.getConfiguration(path).get<string[]>('libraryPath', []);
+    }
+
+    getGtagsSkipSymlink(path: vscode.Uri): GtagsSkipSymlinkOption {
+        return this.getEnumConfiguration('gtagSkipSymlink', GtagsSkipSymlinkOption, GtagsSkipSymlinkOption.None, path);
     }
 
     getObjDirPrefix(): string {

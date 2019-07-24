@@ -108,6 +108,20 @@
                     "default": "",
                     "scope": "window",
                     "description": "If objDirPrefix is set and objDirPrefix directory exists, gtags creates objDirPrefix/project_dir directory and makes tag files in it. Global will also try to search tag files in such directory. Only support UNIX style filesystem. Windows is not supported."
+                },
+                "gnuGlobal.gtagSkipSymlink": {
+                    "type": [
+                        "string"
+                    ],
+                    "enum": [
+                        "None",
+                        "File",
+                        "Directory",
+                        "All"
+                    ],
+                    "default": "None",
+                    "scope": "resource",
+                    "description": "Skip symbolic links while building tag files. Could be None, File, Directory or All. Default is None. (Requires GNU Global 6.6.3)"
                 }
             }
         }

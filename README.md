@@ -75,6 +75,11 @@ This extension is forked/rewriten from [C/C++ Intellisense](https://marketplace.
     * This option is useful if you don't wan't to create tag files in your project directory.
     * Only support UNIX style filesystem so Windows is unsupported.
 
+* `gnuGlobal.gtagSkipSymlink`
+    * Skip symbolic links while building tag files. It is useful if you have large project with lots of symbolic link.
+    * Could be None, File, Directory or All. Default is None.
+    * Requires GNU Global 6.6.3
+
 ## Limitations
 
 GNU global doesn't do any AST parsing, so the auto completion doesn't understand class members and etc.
