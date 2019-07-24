@@ -1,5 +1,15 @@
 # Change Log
 
+## [0.2.8] - 2019-07-24
+
+Added
+
+* Support --skip-symlink
+
+Revised
+
+* Upgrade dependent modules vsce
+
 ## [0.2.7] - 2019-06-29
 
 Added
@@ -19,7 +29,6 @@ Added
 Fixed
 
 * Path error if file path contains more than two spaces.
-
 
 ## [0.2.5] - 2018-11-18
 
