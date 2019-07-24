@@ -51,6 +51,10 @@ export default class GlobalConfiguration {
         return this.getConfiguration().get<string>('encoding', 'utf-8');
     }
 
+    getObjDirPrefix(): string {
+        return this.getConfiguration().get<string>('objDirPrefix', "");
+    }
+
     /* resource scope configurations */
     getAutoUpdateMode(path: vscode.Uri): BoolDefault {
         return this.getEnumConfiguration('autoUpdate', BoolDefault, BoolDefault.Default, path);
@@ -70,9 +74,5 @@ export default class GlobalConfiguration {
 
     getGtagsSkipSymlink(path: vscode.Uri): GtagsSkipSymlinkOption {
         return this.getEnumConfiguration('gtagSkipSymlink', GtagsSkipSymlinkOption, GtagsSkipSymlinkOption.None, path);
-    }
-
-    getObjDirPrefix(): string {
-        return this.getConfiguration().get<string>('objDirPrefix', "");
     }
 }
