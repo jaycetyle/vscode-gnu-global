@@ -1,5 +1,11 @@
 # Change Log
 
+## [0.2.9] - 2019-08-03
+
+Fixed
+
+* Issues #6: Highlight wrong words if line contains white space ident.
+
 ## [0.2.8] - 2019-07-24
 
 Added

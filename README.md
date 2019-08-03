@@ -56,7 +56,7 @@ This extension is forked/rewriten from [C/C++ Intellisense](https://marketplace.
     * Enable/disable auto-completion feature. Default is enabled.
 
 * `gnuGlobal.gtagsForceCpp`
-    * If this option is enabled, each file whose suffix is \".h\" is treated as a C++ source file. You need to rebuild tagsg if you change this configuration. Default is disabled.
+    * If this option is enabled, each file whose suffix is \".h\" is treated as a C++ source file. You need to rebuild tags if you change this configuration. Default is disabled.
 
 * `gnuGlobal.libraryPath`
     * Used as the path to search for library functions. If the specified tags is not found in the project, this extension also searches in these paths.
