@@ -5,7 +5,7 @@ import * as path from 'path';
 import * as fs from 'fs';
 
 /*
- * Parsed gnu global output with -x option
+ * Parse gnu global output with -x option
  * '-x', '--cxref': Use standard ctags cxref (with ‘-x’) format.
  * Sample output:
  * nfs_fh 19 /home/jayce/Projects/linux/include/linux/nfs.h struct nfs_fh {
@@ -28,21 +28,21 @@ class XRef {
 
     /* Parse global xref(-x) output line and return XRef structure */
     static fromGlobalOutput(line: string): XRef {
-        let tokens = line.split(/ +/);
-        const symbol = tokens.shift();
-        const lineNo = tokens.shift();
-        const path = tokens.shift();
-        const info = tokens.join(' ');
+        let tokens = line.match(/([^ ]*) +([^ ]*) +([^ ]*) +(.*)/);
+        if (tokens === null || tokens.length != 5)
+            throw 'Parse xref output failed: ' + line;
 
-        if (symbol && lineNo && path && info) {
-            return new XRef (
-                symbol,
-                lineNo ? parseInt(lineNo) - 1 : 0,
-                path ? path.replace(/%20/g, ' ') : path,
-                info
-            )
-        }
-        throw 'Parse xref output failed: ' + line;
+        const symbol = tokens[1];
+        const lineNo = tokens[2];
+        const path = tokens[3];
+        const info = tokens[4];
+
+        return new XRef (
+            symbol,
+            lineNo ? parseInt(lineNo) - 1 : 0,
+            path ? path.replace(/%20/g, ' ') : path,
+            info
+        )
     }
 
     /*
