@@ -1,4 +1,6 @@
-export enum LogLevel {
+import Configuration, { BoolOption } from './configuration';
+
+enum LogLevel {
     Info,
     Warning,
     Error,
@@ -7,36 +9,60 @@ export enum LogLevel {
 
 export default class Logger {
     // static members for singleton pattern
-    private static _instance: Logger;
+    private static instance: Logger;
 
-    static get instance() {
-        if (!this._instance) {
-            this._instance = new Logger();
-        }
-        return this._instance;
+    static init(configuration: Configuration) {
+        this.instance = new Logger(configuration);
     }
 
-    static log(level: LogLevel, message: string) {
-        this.instance.log(level, message);
+    static fatal(message: string) {
+        if (this.instance) {
+            this.instance.log(LogLevel.Fatal, message);
+        }
+    }
+
+    static error(message: string) {
+        if (this.instance) {
+            this.instance.log(LogLevel.Error, message);
+        }
+    }
+
+    static warn(message: string) {
+        if (this.instance) {
+            this.instance.log(LogLevel.Warning, message);
+        }
+    }
+
+    static info(message: string) {
+        if (this.instance) {
+            this.instance.log(LogLevel.Info, message);
+        }
     }
 
     // class members
-    private _level: LogLevel = LogLevel.Fatal;
-
-    get level(): LogLevel {
-        return this._level;
+    /*
+     * A little bit ugly.
+     * It's possible to register event to update log level, but it's not better.
+     */
+    private constructor(private configuration: Configuration) {
     }
 
-    set level(level: LogLevel) {
-        this._level = level;
+    private get level(): LogLevel {
+        if (this.configuration.debugMode.get() === BoolOption.Enabled) {
+            return LogLevel.Info;
+        } else {
+            return LogLevel.Fatal;
+        }
     }
 
-    log(level: LogLevel, message: string) {
-        if (level >= this._level) {
-            if (level >= LogLevel.Error) {
-                console.error(level + ": " + message);
+    private log(level: LogLevel, message: string) {
+        if (level >= this.level) {
+            if (level == LogLevel.Warning) {
+                console.warn("[jaycetyle.vscode-gnu-global]: " + message);
+            } else if (level == LogLevel.Info) {
+                console.info("[jaycetyle.vscode-gnu-global]: " + message);
             } else {
-                console.log(level + ": " + message);
+                console.error("[jaycetyle.vscode-gnu-global]: " + message);
             }
         }
     }

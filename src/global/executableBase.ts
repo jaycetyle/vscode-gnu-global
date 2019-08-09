@@ -1,5 +1,6 @@
 import Configuration from '../configuration'
 import * as iconv from 'iconv-lite';
+import Logger from '../logger';
 
 const spawnSync = require('child_process').spawnSync;
 
@@ -29,6 +30,8 @@ export default abstract class ExecutableBase {
         } else if (0 != sync.status) {
             throw sync.stderr.toString();
         }
+
+        Logger.info(this.executable + " " + args + "\n" + sync.stdout);
 
         const encoding = this.configuration.encoding.get();
         return iconv.decode(Buffer.from(sync.stdout, 'binary'), encoding).split(/\r?\n/);

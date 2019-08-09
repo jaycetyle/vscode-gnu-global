@@ -1,5 +1,6 @@
 import * as vscode from 'vscode';
 import Global from './global/global';
+import Logger from './logger';
 
 export default class GlobalDefinitionProvider implements vscode.DefinitionProvider {
     global: Global;
@@ -16,6 +17,7 @@ export default class GlobalDefinitionProvider implements vscode.DefinitionProvid
             try {
                 resolve(self.global.provideDefinition(document, position));
             } catch (e) {
+                Logger.error("provideDefinition failed: " + e);
                 return reject(e);
             }
         });

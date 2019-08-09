@@ -79,6 +79,8 @@ export default class GlobalConfiguration {
 
     readonly objDirPrefix = new WindowScopeConfig('gnuGlobal.objDirPrefix', '');
 
+    readonly debugMode = new WindowScopeEnumConfig('gnuGlobal.debugMode',  BoolOption, BoolDefault.Disabled);
+
     /* resource scope configurations */
     readonly autoUpdate = new ResourceScopeEnumConfig('gnuGlobal.autoUpdate', BoolDefault, BoolDefault.Default);
 

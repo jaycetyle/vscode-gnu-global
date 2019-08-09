@@ -2,6 +2,7 @@ import * as vscode from 'vscode';
 import Global from './global/global';
 import Configuration from './configuration'
 import {BoolDefault} from './configuration'
+import Logger from './logger';
 
 export default class GlobalAutoUpdateHandler {
     global: Global;
@@ -29,7 +30,7 @@ export default class GlobalAutoUpdateHandler {
             }
             this.global.updateTags(docChanged);
         } catch (e) {
-            console.error(e.toString());
+            Logger.error("autoUpdateTags failed: " + e);
         }
     }
 }

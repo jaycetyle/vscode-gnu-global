@@ -80,6 +80,10 @@ This extension is forked/rewriten from [C/C++ Intellisense](https://marketplace.
     * Could be None, File, Directory or All. Default is None.
     * Requires GNU Global 6.6.3
 
+* `gnuGlobal.debugMode`
+    * Log more information to debug this extension. Default is Disabled.
+    * If this extension doesn't do well, please try to enable this config. You can find some error logs in Developer Tools (Help > Toggle Developer Tools).
+
 ## Limitations
 
 GNU global doesn't do any AST parsing, so the auto completion doesn't understand class members and etc.

@@ -2,6 +2,7 @@ import * as vscode from 'vscode';
 import Global from './global/global';
 import Configuration from './configuration'
 import {BoolOption} from './configuration'
+import Logger from './logger';
 
 export default class GlobalCompletionItemProvider implements vscode.CompletionItemProvider {
     global: Global;
@@ -23,6 +24,7 @@ export default class GlobalCompletionItemProvider implements vscode.CompletionIt
                     return reject();
                 resolve(self.global.provideCompletionItems(document, position));
             } catch (e) {
+                Logger.error("provideCompletionItems failed: " + e);
                 return reject(e);
             }
         });

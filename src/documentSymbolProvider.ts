@@ -1,5 +1,6 @@
 import * as vscode from 'vscode';
 import Global from './global/global';
+import Logger from './logger';
 
 export default class GlobalDocumentSymbolProvider implements vscode.DocumentSymbolProvider {
     global: Global;
@@ -15,6 +16,7 @@ export default class GlobalDocumentSymbolProvider implements vscode.DocumentSymb
             try {
                 resolve(self.global.provideDocumentSymbols(document));
             } catch (e) {
+                Logger.error("provideDocumentSymbols failed: " + e);
                 return reject(e);
             }
         });

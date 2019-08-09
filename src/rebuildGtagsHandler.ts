@@ -1,5 +1,6 @@
 import * as vscode from 'vscode';
 import Gtags from './global/gtags';
+import Logger from './logger';
 
 export default class GlobalRebuildGtags {
     gtags: Gtags;
@@ -19,6 +20,7 @@ export default class GlobalRebuildGtags {
             try {
                 this.gtags.rebuildTags(folder.uri);
             } catch (e) {
+                Logger.error("Failed to build tag for " + folder.name + ". " + e);
                 errors.push(folder.name);
             }
         }

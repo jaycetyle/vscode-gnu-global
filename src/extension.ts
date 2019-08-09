@@ -1,5 +1,6 @@
 'use strict';
 import * as vscode from 'vscode';
+import Logger from './logger';
 import Global from './global/global';
 import Gtags from './global/gtags';
 import Configuration from './configuration';
@@ -26,7 +27,8 @@ const disposables:vscode.Disposable[] = [];
 // The extension is activated the very first time the command is executed
 export function activate(context: vscode.ExtensionContext) {
 
-    console.log('"vscode-gnu-global" is now active!');
+    Logger.init(configuration);
+    Logger.info("Init logger successfully");
 
     disposables.push(vscode.languages.registerDefinitionProvider(['cpp', 'c'],
                      new DefinitionProvider(global)));
@@ -43,6 +45,8 @@ export function activate(context: vscode.ExtensionContext) {
                      rebuildGtagsHandler.rebuildGtags, rebuildGtagsHandler));
     disposables.push(vscode.workspace.onDidSaveTextDocument(
                      doc => autoUpdateHandler.autoUpdateTags(doc), autoUpdateHandler));
+
+    Logger.info("Extension is now active!");
 }
 
 // This method is called when the extension is deactivated

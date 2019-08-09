@@ -1,5 +1,6 @@
 import * as vscode from 'vscode';
 import Global from './global/global';
+import Logger from './logger';
 
 export default class GlobalShowVersionHandler {
     global: Global;
@@ -12,7 +13,7 @@ export default class GlobalShowVersionHandler {
         try {
             vscode.window.showInformationMessage(this.global.getVersion());
         } catch (e) {
-            console.error(e.toString());
+            Logger.error("showGlobalVersion failed: " + e);
             vscode.window.showInformationMessage('Failed to get GNU Global version');
         }
     }

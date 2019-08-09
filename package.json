@@ -122,6 +122,18 @@
                     "default": "None",
                     "scope": "resource",
                     "description": "Skip symbolic links while building tag files. Could be None, File, Directory or All. Default is None. (Requires GNU Global 6.6.3)"
+                },
+                "gnuGlobal.debugMode": {
+                    "type": [
+                        "string"
+                    ],
+                    "enum": [
+                        "Enabled",
+                        "Disabled"
+                    ],
+                    "default": "Disabled",
+                    "scope": "window",
+                    "description": "Log more information to debug this extension. Default is Disabled."
                 }
             }
         }
