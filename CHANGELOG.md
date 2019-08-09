@@ -1,5 +1,15 @@
 # Change Log
 
+## [0.3.0] - 2019-08-09
+
+Added
+
+* debugMode to log more error information.
+
+Fixed
+
+* Issues #6: Highlight wrong words if line contains white space ident
+
 ## [0.2.9] - 2019-08-03
 
 Fixed
