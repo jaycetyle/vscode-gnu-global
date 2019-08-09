@@ -12,30 +12,40 @@ import * as fs from 'fs';
  */
 class XRef {
     readonly symbol: string;
-    readonly line: number;
+    readonly lineNo: number;
     readonly path: string;
     readonly info: string;
 
     constructor(symbol: string,
-                line: number,
+                lineNo: number,
                 path: string,
                 info: string) {
         this.symbol = symbol;
-        this.line = line;
+        this.lineNo = lineNo;
         this.path = path;
         this.info = info;
     }
 
-    /* Parse global xref(-x) output line and return XRef structure */
-    static fromGlobalOutput(line: string): XRef {
-        let tokens = line.match(/([^ ]*) +([^ ]*) +([^ ]*) +(.*)/);
+    /*
+     * Parse global xref(-x) output line and return XRef structure.
+     *
+     * A bad design in this output format is that it uses %-16s to print the pathname.
+     * So if the pathname length < 16, it will append several white spaces after it and
+     * confuses with the prefix white spaces of codes output.
+     *
+     * The following codes are cut from gnu global source code.
+     * fprintf(cv->op, "%-16s %4d %-16s ", tag, lineno, convert_pathname(cv, path));
+     * code_fputs(rest, cv->op);
+     */
+    static parseLine(line: string): XRef {
+        let tokens = line.match(/([^ ]*) +([^ ]*) +([^ ]*) (.*)/);
         if (tokens === null || tokens.length != 5)
             throw 'Parse xref output failed: ' + line;
 
         const symbol = tokens[1];
         const lineNo = tokens[2];
         const path = tokens[3];
-        const info = tokens[4];
+        const info = tokens[4].substr(path.length >= 16 ? 0 : 16 - path.length);
 
         return new XRef (
             symbol,
@@ -68,8 +78,8 @@ class XRef {
     get range(): vscode.Range {
         const colStart = this.info.indexOf(this.symbol);
         const colEnd = colStart + this.symbol.length;
-        const start = new vscode.Position(this.line, colStart);
-        const end = new vscode.Position(this.line, colEnd);
+        const start = new vscode.Position(this.lineNo, colStart);
+        const end = new vscode.Position(this.lineNo, colEnd);
         return new vscode.Range(start, end);
     }
 
@@ -114,7 +124,7 @@ export default class Global extends executableBase {
                       : vscode.Location[] {
         const symbol = document.getText(document.getWordRangeAtPosition(position));
         const lines = this.executeOnDocument(['--encode-path', '" "', '-xaT', symbol], document);
-        return mapNoneEmpty(lines, line => XRef.fromGlobalOutput(line).location);
+        return mapNoneEmpty(lines, line => XRef.parseLine(line).location);
     }
 
     provideReferences(document: vscode.TextDocument,
@@ -122,7 +132,7 @@ export default class Global extends executableBase {
                       : vscode.Location[] {
         const symbol = document.getText(document.getWordRangeAtPosition(position));
         const lines = this.executeOnDocument(['--encode-path', '" "', '-xra', symbol], document);
-        return mapNoneEmpty(lines, line => XRef.fromGlobalOutput(line).location);
+        return mapNoneEmpty(lines, line => XRef.parseLine(line).location);
     }
 
     provideCompletionItems(document: vscode.TextDocument,
@@ -137,7 +147,7 @@ export default class Global extends executableBase {
                            : vscode.SymbolInformation[] {
         const lines = this.executeOnDocument(['--encode-path', '" "', '-xaf', document.fileName], document);
         return mapNoneEmpty(lines, (line) => {
-            const xref = XRef.fromGlobalOutput(line);
+            const xref = XRef.parseLine(line);
             return new vscode.SymbolInformation(xref.symbol,
                                                 xref.symbolKind,
                                                 '', // container name, we don't support it

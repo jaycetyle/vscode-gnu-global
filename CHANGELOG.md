@@ -4,7 +4,7 @@
 
 Fixed
 
-* Issues #6: Highlight wrong words if line contains white space ident.
+* Issues #6: Highlight wrong words if line contains more than one continuous white spaces.
 
 ## [0.2.8] - 2019-07-24
 
