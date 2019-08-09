@@ -18,7 +18,7 @@ export default class GlobalCompletionItemProvider implements vscode.CompletionIt
         var self = this;
         return new Promise<vscode.CompletionItem[]>((resolve, reject) => {
             try {
-                const mode = this.configuration.getCompletionMode(document.uri);
+                const mode = this.configuration.completion.get(document.uri);
                 if (mode !== BoolOption.Enabled)
                     return reject();
                 resolve(self.global.provideCompletionItems(document, position));

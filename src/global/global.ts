@@ -112,7 +112,7 @@ export default class Global extends executableBase {
     }
 
     get executable(): string {
-        return this.configuration.getGlobalExecutable();
+        return this.configuration.globalExecutable.get();
     }
 
     getVersion(): string {
@@ -165,14 +165,14 @@ export default class Global extends executableBase {
     }
 
     private getLibPathEnvValue(docUri: vscode.Uri): string {
-        const paths = this.configuration.getLibraryPath(docUri);
+        const paths = this.configuration.libraryPaths.get(docUri);
         return paths.join(path.delimiter);
     }
 
     private executeOnDocument(args: string[], document: vscode.TextDocument) : string[] {
         const env = {
             'GTAGSLIBPATH': this.getLibPathEnvValue(document.uri),
-            'GTAGSOBJDIRPREFIX': this.configuration.getObjDirPrefix()
+            'GTAGSOBJDIRPREFIX': this.configuration.objDirPrefix.get()
         };
 
         return this.execute(args, path.dirname(document.fileName), env);

@@ -18,61 +18,90 @@ export enum GtagsSkipSymlinkOption {
     All = "All"
 }
 
+export abstract class Config {
+    constructor (readonly section: string) {
+    }
+}
+
+export abstract class TypedConfig<T> extends Config {
+    constructor (section: string, readonly defaultValue: T) {
+        super(section);
+    }
+}
+
+export class WindowScopeConfig<T> extends TypedConfig<T> {
+    constructor (section: string, defaultValue: T) {
+        super(section, defaultValue);
+    }
+
+    public get(): T {
+        return vscode.workspace.getConfiguration().get<T>(this.section, this.defaultValue);
+    }
+}
+
+export class WindowScopeEnumConfig<T extends { [name: string]: any }> extends WindowScopeConfig<string> {
+    constructor (section: string, private enumType: T, defaultValue: string) {
+        super(section, defaultValue);
+    }
+
+    public get(): T[keyof T] {
+        return getEnumConfiguration(this.section, this.enumType, this.defaultValue);
+    }
+}
+
+export class ResourceScopeConfig<T> extends TypedConfig<T> {
+    constructor (section: string, defaultValue: T) {
+        super(section, defaultValue);
+    }
+
+    public get(path: vscode.Uri): T {
+        return vscode.workspace.getConfiguration(undefined, path).get<T>(this.section, this.defaultValue);
+    }
+}
+
+export class ResourceScopeEnumConfig<T extends { [name: string]: any }> extends ResourceScopeConfig<string> {
+    constructor (section: string, private enumType: T, defaultValue: string) {
+        super(section, defaultValue);
+    }
+
+    public get(path: vscode.Uri): T[keyof T] {
+        return getEnumConfiguration(this.section, this.enumType, this.defaultValue, path);
+    }
+}
+
 export default class GlobalConfiguration {
-    private getConfiguration(resource?: vscode.Uri | undefined): vscode.WorkspaceConfiguration {
-        const config = vscode.workspace.getConfiguration('gnuGlobal', resource);
-        return config;
-    }
-
-    private getEnumConfiguration(section: string, type: any, defaultValue: string,
-                                 resource?: vscode.Uri | undefined) {
-        if (!(defaultValue in type)) {
-            throw "BUG: type of default value doesn't match given type.";
-        }
-
-        const ret = this.getConfiguration(resource).get(section, defaultValue);
-        if (ret in type) {
-            return type[ret];
-        } else {
-            return type[defaultValue];
-        }
-    }
-
     /* window scope configurations */
-    getGlobalExecutable(): string {
-        return this.getConfiguration().get<string>('globalExecutable', 'global');
-    }
+    readonly globalExecutable = new WindowScopeConfig('gnuGlobal.globalExecutable', 'global');
 
-    getGtagsExecutable(): string {
-        return this.getConfiguration().get<string>('gtagsExecutable', 'gtags');
-    }
+    readonly gtagsExecutable = new WindowScopeConfig('gnuGlobal.gtagsExecutable', 'gtags');
 
-    getEncoding(): string {
-        return this.getConfiguration().get<string>('encoding', 'utf-8');
-    }
+    readonly encoding = new WindowScopeConfig('gnuGlobal.encoding', 'utf-8');
 
-    getObjDirPrefix(): string {
-        return this.getConfiguration().get<string>('objDirPrefix', "");
-    }
+    readonly objDirPrefix = new WindowScopeConfig('gnuGlobal.objDirPrefix', '');
 
     /* resource scope configurations */
-    getAutoUpdateMode(path: vscode.Uri): BoolDefault {
-        return this.getEnumConfiguration('autoUpdate', BoolDefault, BoolDefault.Default, path);
+    readonly autoUpdate = new ResourceScopeEnumConfig('gnuGlobal.autoUpdate', BoolDefault, BoolDefault.Default);
+
+    readonly completion = new ResourceScopeEnumConfig('gnuGlobal.completion', BoolOption, BoolDefault.Enabled);
+
+    readonly libraryPaths = new ResourceScopeConfig<string[]>('gnuGlobal.libraryPath', []);
+
+    readonly gtagsForceCpp = new ResourceScopeEnumConfig('gnuGlobal.gtagsForceCpp', BoolOption, BoolDefault.Disabled);
+
+    readonly gtagsSkipSymlink = new ResourceScopeEnumConfig('gnuGlobal.gtagSkipSymlink', GtagsSkipSymlinkOption, GtagsSkipSymlinkOption.None);
+}
+
+/* Util function to get and check enum config */
+function getEnumConfiguration(section: string, type: any, defaultValue: string,
+                              resource?: vscode.Uri | undefined) {
+    if (!(defaultValue in type)) {
+        throw "BUG: type of default value doesn't match given type.";
     }
 
-    getCompletionMode(path: vscode.Uri): BoolOption {
-        return this.getEnumConfiguration('completion', BoolOption, BoolOption.Enabled, path);
-    }
-
-    getGtagsForceCpp(path: vscode.Uri): BoolOption {
-        return this.getEnumConfiguration('gtagsForceCpp', BoolOption, BoolOption.Disabled, path);
-    }
-
-    getLibraryPath(path: vscode.Uri): string[] {
-        return this.getConfiguration(path).get<string[]>('libraryPath', []);
-    }
-
-    getGtagsSkipSymlink(path: vscode.Uri): GtagsSkipSymlinkOption {
-        return this.getEnumConfiguration('gtagSkipSymlink', GtagsSkipSymlinkOption, GtagsSkipSymlinkOption.None, path);
+    const ret = vscode.workspace.getConfiguration(undefined, resource).get(section, defaultValue);
+    if (ret in type) {
+        return type[ret];
+    } else {
+        return type[defaultValue];
     }
 }

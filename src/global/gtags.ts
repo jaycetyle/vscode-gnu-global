@@ -9,27 +9,27 @@ export default class Gtags extends ExecutableBase {
     }
 
     get executable(): string {
-        return this.configuration.getGtagsExecutable();
+        return this.configuration.gtagsExecutable.get();
     }
 
     rebuildTags(folder: vscode.Uri) {
         var env: any = {};
         var opt = [];
 
-        if (this.configuration.getGtagsForceCpp(folder) === BoolOption.Enabled) {
+        if (this.configuration.gtagsForceCpp.get(folder) === BoolOption.Enabled) {
             env.GTAGSFORCECPP = 1;
         }
 
-        if (this.configuration.getObjDirPrefix() !== "") {
-            env.GTAGSOBJDIRPREFIX = this.configuration.getObjDirPrefix();
+        if (this.configuration.objDirPrefix.get() !== "") {
+            env.GTAGSOBJDIRPREFIX = this.configuration.objDirPrefix.get();
             opt.push('-O');
         }
 
-        if (this.configuration.getGtagsSkipSymlink(folder) === GtagsSkipSymlinkOption.File) {
+        if (this.configuration.gtagsSkipSymlink.get(folder) === GtagsSkipSymlinkOption.File) {
             opt.push('--skip-symlink=f');
-        } else if (this.configuration.getGtagsSkipSymlink(folder) === GtagsSkipSymlinkOption.Directory) {
+        } else if (this.configuration.gtagsSkipSymlink.get(folder) === GtagsSkipSymlinkOption.Directory) {
             opt.push('--skip-symlink=d');
-        } else if (this.configuration.getGtagsSkipSymlink(folder) === GtagsSkipSymlinkOption.All) {
+        } else if (this.configuration.gtagsSkipSymlink.get(folder) === GtagsSkipSymlinkOption.All) {
             opt.push('--skip-symlink=a');
         }
 

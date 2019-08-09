@@ -17,7 +17,7 @@ export default class GlobalAutoUpdateHandler {
             return;
 
         try {
-            const autoUpdateMode = this.configuration.getAutoUpdateMode(docChanged.uri);
+            const autoUpdateMode = this.configuration.autoUpdate.get(docChanged.uri);
 
             if (autoUpdateMode === BoolDefault.Disabled) {
                 return;

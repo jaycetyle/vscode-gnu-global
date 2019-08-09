@@ -30,7 +30,7 @@ export default abstract class ExecutableBase {
             throw sync.stderr.toString();
         }
 
-        const encoding = this.configuration.getEncoding();
+        const encoding = this.configuration.encoding.get();
         return iconv.decode(Buffer.from(sync.stdout, 'binary'), encoding).split(/\r?\n/);
     }
 }
