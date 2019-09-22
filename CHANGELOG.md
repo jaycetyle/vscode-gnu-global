@@ -1,5 +1,11 @@
 # Change Log
 
+## [0.3.1] - 2019-09-22
+
+Fixed
+
+* Issues #6: Highlight wrong words if line contains two string for target symbol.
+
 ## [0.3.0] - 2019-08-09
 
 Added
