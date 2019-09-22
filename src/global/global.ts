@@ -75,12 +75,24 @@ class XRef {
         return kind;
     }
 
+    private static getSymbolStartIndex(line: string, symbol: string): number {
+        const regex = RegExp("([a-zA-Z0-9_]*)" + symbol + "([a-zA-Z0-9_]*)", 'g');
+        let result;
+        while ((result = regex.exec(line)) !== null) {
+            if (result[0] === symbol) {
+                return result.index;
+            }
+        }
+        // Cannot find symbol by regex(?). Fallback to indexOf.
+        return line.indexOf(symbol);
+    }
+
     get range(): vscode.Range {
-        const colStart = this.info.indexOf(this.symbol);
-        const colEnd = colStart + this.symbol.length;
-        const start = new vscode.Position(this.lineNo, colStart);
-        const end = new vscode.Position(this.lineNo, colEnd);
-        return new vscode.Range(start, end);
+        const startColumn = XRef.getSymbolStartIndex(this.info, this.symbol);
+        const endColumn = startColumn + this.symbol.length;
+        const startPosi = new vscode.Position(this.lineNo, startColumn);
+        const endPosi = new vscode.Position(this.lineNo, endColumn);
+        return new vscode.Range(startPosi, endPosi);
     }
 
     get location(): vscode.Location {
