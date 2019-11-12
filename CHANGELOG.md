@@ -1,5 +1,11 @@
 # Change Log
 
+## [0.3.2] - 2019-11-12
+
+Fixed
+
+* Issues #14: fix child_process results in ENOMEM error with empty options.env
+
 ## [0.3.1] - 2019-09-22
 
 Fixed

@@ -16,8 +16,10 @@ export default abstract class ExecutableBase {
     /* Execute 'executable args' and return stdout with line split */
     protected execute(args: string[],
                       cwd: string|undefined = undefined,
-                      env: any = null)
+                      env: any = {})
                       : string[] {
+        // TODO: This is a workaround for Issue#14. Remove it if vscode fixes it.
+        env.VSCODEGNUGLOBAL = 1;
         const options = {
             cwd: cwd,
             env: env,

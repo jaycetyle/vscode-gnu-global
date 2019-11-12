@@ -2,7 +2,7 @@
     "name": "vscode-gnu-global",
     "displayName": "C/C++ GNU Global",
     "description": "Intellisense for C/C++ using GNU Global",
-    "version": "0.3.1",
+    "version": "0.3.2",
     "publisher": "jaycetyle",
     "preview": true,
     "repository": {
@@ -147,13 +147,12 @@
     },
     "devDependencies": {
         "@types/mocha": "^5.2.7",
-        "@types/node": "^12.7.5",
-        "tslint": "^5.20.0",
-        "typescript": "^3.6.3",
+        "@types/node": "^12.12.7",
+        "tslint": "^5.20.1",
+        "typescript": "^3.7.2",
         "vscode": "^1.1.36"
     },
     "dependencies": {
-        "iconv-lite": "^0.5.0",
-        "vsce": "^1.66.0"
+        "iconv-lite": "^0.5.0"
     }
 }
