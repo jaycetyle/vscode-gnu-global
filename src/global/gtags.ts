@@ -21,7 +21,8 @@ export default class Gtags extends ExecutableBase {
         }
 
         if (this.configuration.objDirPrefix.get() !== "") {
-            env.GTAGSOBJDIRPREFIX = this.configuration.objDirPrefix.get();
+            env.MAKEOBJDIRPREFIX = this.configuration.objDirPrefix.get();  // for previous gtags
+            env.GTAGSOBJDIRPREFIX = this.configuration.objDirPrefix.get(); // alias for MAKEOBJDIRPREFIX
             opt.push('-O');
         }
 
