@@ -183,8 +183,10 @@ export default class Global extends executableBase {
 
     private executeOnDocument(args: string[], document: vscode.TextDocument) : string[] {
         const env = {
-            'GTAGSLIBPATH': this.getLibPathEnvValue(document.uri),
-            'GTAGSOBJDIRPREFIX': this.configuration.objDirPrefix.get()
+            'MAKEOBJDIR': this.getLibPathEnvValue(document.uri),        // for previous gtags
+            'MAKEOBJDIRPREFIX': this.configuration.objDirPrefix.get(),  // for previous gtags
+            'GTAGSLIBPATH': this.getLibPathEnvValue(document.uri),      // alias for MAKEOBJDIR
+            'GTAGSOBJDIRPREFIX': this.configuration.objDirPrefix.get(), // alias for MAKEOBJDIRPREFIX
         };
 
         return this.execute(args, path.dirname(document.fileName), env);
