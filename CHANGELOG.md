@@ -1,5 +1,12 @@
 # Change Log
 
+## [0.3.3] - 2020-05-26
+
+Fixed
+
+* Add MAKEOBJDIRPREFIX for supporting GLOBAL < 6.5.7
+* Fixed some vulnerabilities
+
 ## [0.3.2] - 2019-11-12
 
 Fixed
