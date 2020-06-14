@@ -119,6 +119,8 @@ function mapNoneEmpty<T>(lines: string[], callbackfn: (value: string) => T|undef
 }
 
 export default class Global extends executableBase {
+    saved_env: any;
+
     constructor(configuration: Configuration) {
         super(configuration);
     }
@@ -167,6 +169,21 @@ export default class Global extends executableBase {
         });
     }
 
+    async provideWorkspaceSymbols(query: string)
+                           : Promise<vscode.SymbolInformation[]> {
+        const word = query + '*';
+        let cmd: string[] = ['--encode-path', '" "', '-xa', word, '| head -300'];
+        let lines = await this.execute_async(cmd, vscode.workspace.rootPath, this.saved_env);
+
+        return mapNoneEmpty(lines, (line) => {
+            const xref = XRef.parseLine(line);
+            return new vscode.SymbolInformation(xref.symbol,
+                                                xref.symbolKind,
+                                                '', // container name, we don't support it
+                                                xref.location);
+        });
+    }
+
     updateTags(document: vscode.TextDocument) {
         this.executeOnDocument(['-u'], document);
     }
@@ -189,6 +206,7 @@ export default class Global extends executableBase {
             'GTAGSOBJDIRPREFIX': this.configuration.objDirPrefix.get(), // alias for MAKEOBJDIRPREFIX
         };
 
+        this.saved_env = env;
         return this.execute(args, path.dirname(document.fileName), env);
     }
 }

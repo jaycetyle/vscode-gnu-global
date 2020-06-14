@@ -6,11 +6,12 @@ import Gtags from './global/gtags';
 import Configuration from './configuration';
 import AutoUpdateHandler from './autoUpdateHandler';
 import ShowVersionHandler from './showVersionHandler';
-import RebuildGtagsHandler from './rebuildGtagsHandler'
-import DefinitionProvider from './definitionProvider'
-import ReferenceProvider from './referenceProvider'
-import CompletionItemProvider from './completionItemProvider'
-import DocumentSymbolProvider from './documentSymbolProvider'
+import RebuildGtagsHandler from './rebuildGtagsHandler';
+import DefinitionProvider from './definitionProvider';
+import ReferenceProvider from './referenceProvider';
+import CompletionItemProvider from './completionItemProvider';
+import DocumentSymbolProvider from './documentSymbolProvider';
+import WorkspaceSymbolProvider from './workspaceSymbolProvider';
 
 const configuration = new Configuration();
 
@@ -38,6 +39,7 @@ export function activate(context: vscode.ExtensionContext) {
                      new CompletionItemProvider(global, configuration)));
     disposables.push(vscode.languages.registerDocumentSymbolProvider(['cpp', 'c'],
                      new DocumentSymbolProvider(global)));
+    disposables.push(vscode.languages.registerWorkspaceSymbolProvider(new WorkspaceSymbolProvider(global)));
 
     disposables.push(vscode.commands.registerCommand('extension.showGlobalVersion',
                      showVersionHandler.showGlobalVersion, showVersionHandler));
