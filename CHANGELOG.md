@@ -1,5 +1,15 @@
 # Change Log
 
+## [0.3.4] - 2021-04-25
+
+Fixed
+
+* Ahange the scope of globalExecutable and gtagsExecutable to "machine"
+
+Added
+
+* Support looking up symbols in the workspace
+
 ## [0.3.3] - 2020-05-26
 
 Fixed
