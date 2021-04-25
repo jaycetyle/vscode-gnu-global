@@ -78,6 +78,7 @@
                         "string"
                     ],
                     "default": "global",
+                    "scope": "machine",
                     "description": "Specify the path to the global."
                 },
                 "gnuGlobal.gtagsExecutable": {
@@ -85,6 +86,7 @@
                         "string"
                     ],
                     "default": "gtags",
+                    "scope": "machine",
                     "description": "Specify the path to the gtags."
                 },
                 "gnuGlobal.libraryPath": {
