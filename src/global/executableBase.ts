@@ -20,8 +20,12 @@ export default abstract class ExecutableBase {
                       cwd: string|undefined = undefined,
                       env: any = {})
                       : string[] {
-        // TODO: This is a workaround for Issue#14. Remove it if vscode fixes it.
-        env.VSCODEGNUGLOBAL = 1;
+        /* default add the PATH to the env */
+        env = {
+            ...env,
+            ...process.env
+        };
+
         const options = {
             cwd: cwd,
             env: env,
@@ -49,8 +53,12 @@ export default abstract class ExecutableBase {
         env: any = {}
         ) : Promise<string[]>
     {
-        // TODO: This is a workaround for Issue#14. Remove it if vscode fixes it.
-        env.VSCODEGNUGLOBAL = 1;
+        /* default add the PATH to the env */
+        env = {
+            ...env,
+            ...process.env
+        };
+
         const options = {
             cwd: cwd,
             env: env,

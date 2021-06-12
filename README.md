@@ -11,7 +11,7 @@ This extension is forked/rewriten from [C/C++ Intellisense](https://marketplace.
     sudo apt install global
     ```
 
-* Add the folder of global executable to PATH enviroment variable, or specify gnuGlobal.globalExecutable and gnuGlobal.gtagsExecutable configuration.
+* Add the folder of global executable to PATH enviroment variable, or specify gnuGlobal.globalExecutable and gnuGlobal.gtagsExecutable configuration. (For users of windows, WSL is recommended.)
     ```
     {
         "gnuGlobal.globalExecutable": "C:\\global\\global.exe",
@@ -29,6 +29,10 @@ This extension is forked/rewriten from [C/C++ Intellisense](https://marketplace.
         "gnuGlobal.encoding": "Big5"
     }
     ```
+
+## For C++ Users
+
+* The author of GNU global deprecated the built-in C++ parser of GNU global since 6.6.5. Please refer to the [release note of GNU Global](https://lists.gnu.org/archive/html/info-global/2020-09/msg00000.html). This extension is still useful for large C projects such as linux kernel source, but it seems that I need to find some other solutions for C++. Maybe plugin-parser of gtags.
 
 ## Command
 * `Global: Rebuild Gtags Database`
@@ -56,6 +60,7 @@ This extension is forked/rewriten from [C/C++ Intellisense](https://marketplace.
     * Enable/disable auto-completion feature. Default is enabled.
 
 * `gnuGlobal.gtagsForceCpp`
+    * Deprecated in GNU global 6.6.6. Do not set this variable if you are using plug-in parsers.
     * If this option is enabled, each file whose suffix is \".h\" is treated as a C++ source file. You need to rebuild tags if you change this configuration. Default is disabled.
 
 * `gnuGlobal.libraryPath`

@@ -1,14 +1,20 @@
 # Change Log
 
+## [0.3.5] - 2021-06-12
+
+Fixed
+
+* Default add PATH (process.env) to env
+
 ## [0.3.4] - 2021-04-25
 
 Fixed
 
-* Ahange the scope of globalExecutable and gtagsExecutable to "machine"
+* Change the scope of globalExecutable and gtagsExecutable to "machine"
 
 Added
 
-* Support looking up symbols in the workspace
+* Support looking up symbols in the workspace (only for linux)
 
 ## [0.3.3] - 2020-05-26
 
