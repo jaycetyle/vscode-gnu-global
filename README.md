@@ -75,6 +75,10 @@ This extension is forked/rewriten from [C/C++ Intellisense](https://marketplace.
 * `gnuGlobal.gtagsExecutable`
     * Specify the path to the gtags. Default is 'gtags'.
 
+* `gnuGlobal.gtagsLimitCommand`
+    * Specify the command pipe into Global tag search result to limit the maximum line count.
+    * Default is: `head -300`, for Windows users may set to: `more` for CMD or `Select-Object -first 300` for PowerShell.
+
 * `gnuGlobal.objDirPrefix`
     * If objDirPrefix is set and objDirPrefix directory exists, gtags creates objDirPrefix/project_dir directory and makes tag files in it. Global will also try to search tag files in that directory.
     * This option is useful if you don't wan't to create tag files in your project directory.

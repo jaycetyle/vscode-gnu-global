@@ -89,6 +89,14 @@
                     "scope": "machine",
                     "description": "Specify the path to the gtags."
                 },
+                "gnuGlobal.gtagsLimitCommand": {
+                    "type": [
+                        "string"
+                    ],
+                    "default": "head -300",
+                    "scope": "resource",
+                    "description": "Specify the command pipe into Global tag search result to limit the maximum line count."
+                },
                 "gnuGlobal.libraryPath": {
                     "type": [
                         "array"
