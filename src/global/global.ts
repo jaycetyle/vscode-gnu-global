@@ -171,8 +171,11 @@ export default class Global extends executableBase {
 
     async provideWorkspaceSymbols(query: string)
                            : Promise<vscode.SymbolInformation[]> {
-        const word = query + '*';
-        let cmd: string[] = ['--encode-path', '" "', '-xa', word, '| head -300'];
+        const word = query.split('').join('.*') + '.*'
+        let cmd: string[] = ['--encode-path', '" "', '-xa', word];
+        if (this.configuration.gtagsLimitCommand.get().length) {
+            cmd.push('|' + this.configuration.gtagsLimitCommand.get())
+        }
         let lines = await this.execute_async(cmd, vscode.workspace.rootPath, this.saved_env);
 
         return mapNoneEmpty(lines, (line) => {

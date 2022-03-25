@@ -81,6 +81,8 @@ export default class GlobalConfiguration {
 
     readonly debugMode = new WindowScopeEnumConfig('gnuGlobal.debugMode',  BoolOption, BoolDefault.Disabled);
 
+    readonly gtagsLimitCommand = new WindowScopeConfig('gnuGlobal.gtagsLimitCommand', 'head -300');
+
     /* resource scope configurations */
     readonly autoUpdate = new ResourceScopeEnumConfig('gnuGlobal.autoUpdate', BoolDefault, BoolDefault.Default);
 
