@@ -1,7 +1,7 @@
 # C/C++ GNU Global
 Provide Intellisense for C/C++ using [GNU Global](https://www.gnu.org/software/global/).
 
-This extension is forked/rewriten from [C/C++ Intellisense](https://marketplace.visualstudio.com/items?itemName=austin.code-gnu-global) and is still preliminary. If you encounter any problems, please go to [Github Issues](https://github.com/jaycetyle/vscode-gnu-global/issues/) for issue report and feature request.
+This extension is forked/rewriten from [C/C++ Intellisense](https://marketplace.visualstudio.com/items?itemName=austin.code-gnu-global) and is still preliminary. If you encounter any problems, please go to [Github Issues](https://github.com/barretren/vscode-gnu-global/issues/) for issue report and feature request.
 
 ## Usage
 * This extension requires GNU Global (>=6.5). You can download the binary from [Global website](https://www.gnu.org/software/global/download.html).
@@ -96,6 +96,6 @@ GNU global doesn't do any AST parsing, so the auto completion doesn't understand
 ## Resources
 GNU Global: https://www.gnu.org/software/global/
 
-Repository: https://github.com/jaycetyle/vscode-gnu-global/
+Repository: https://github.com/barretren/vscode-gnu-global/
 
 **Enjoy!**
