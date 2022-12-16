@@ -31,13 +31,13 @@ export function activate(context: vscode.ExtensionContext) {
     Logger.init(configuration);
     Logger.info("Init logger successfully");
 
-    disposables.push(vscode.languages.registerDefinitionProvider(['cpp', 'c'],
+    disposables.push(vscode.languages.registerDefinitionProvider(['cpp', 'c', 'java'],
                      new DefinitionProvider(global)));
-    disposables.push(vscode.languages.registerReferenceProvider(['cpp', 'c'],
+    disposables.push(vscode.languages.registerReferenceProvider(['cpp', 'c', 'java'],
                      new ReferenceProvider(global)));
-    disposables.push(vscode.languages.registerCompletionItemProvider(['cpp', 'c'],
+    disposables.push(vscode.languages.registerCompletionItemProvider(['cpp', 'c', 'java'],
                      new CompletionItemProvider(global, configuration)));
-    disposables.push(vscode.languages.registerDocumentSymbolProvider(['cpp', 'c'],
+    disposables.push(vscode.languages.registerDocumentSymbolProvider(['cpp', 'c', 'java'],
                      new DocumentSymbolProvider(global)));
     disposables.push(vscode.languages.registerWorkspaceSymbolProvider(new WorkspaceSymbolProvider(global)));
 

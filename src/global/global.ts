@@ -145,8 +145,12 @@ export default class Global extends executableBase {
                       position: vscode.Position)
                       : vscode.Location[] {
         const symbol = document.getText(document.getWordRangeAtPosition(position));
-        const lines = this.executeOnDocument(['--encode-path', '" "', '-xra', symbol], document);
-        return mapNoneEmpty(lines, line => XRef.parseLine(line).location);
+        const reflines = this.executeOnDocument(['--encode-path', '" "', '-xra', symbol], document);
+        const symlines = this.executeOnDocument(['--encode-path', '" "', '-xsa', symbol], document);
+        const ret = mapNoneEmpty(reflines, line => XRef.parseLine(line).location);
+        if (ret.length)
+            return ret;
+        return mapNoneEmpty(symlines, line => XRef.parseLine(line).location);
     }
 
     provideCompletionItems(document: vscode.TextDocument,

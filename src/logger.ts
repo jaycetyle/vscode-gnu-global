@@ -58,11 +58,11 @@ export default class Logger {
     private log(level: LogLevel, message: string) {
         if (level >= this.level) {
             if (level == LogLevel.Warning) {
-                console.warn("[jaycetyle.vscode-gnu-global]: " + message);
+                console.warn("[barretren.vscode-gtags]: " + message);
             } else if (level == LogLevel.Info) {
-                console.info("[jaycetyle.vscode-gnu-global]: " + message);
+                console.info("[barretren.vscode-gtags]: " + message);
             } else {
-                console.error("[jaycetyle.vscode-gnu-global]: " + message);
+                console.error("[barretren.vscode-gtags]: " + message);
             }
         }
     }
